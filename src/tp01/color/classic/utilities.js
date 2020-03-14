@@ -9,26 +9,16 @@ const Utilities = {
   },
 
   hue2rgb (h, s, l) {
-    let r
-    let g
-    let b
-    // Pasar hue entre 0 y 1
-    h = h / 360
-    if (s === 0) {
-      r = g = b = l
-    } else {
-      const p = l <= 0.5 ? l * (1 + s) : l + s - (l * s)
-      const q = (2 * l) - p
-
-      r = this.getRGB(q, p, h + 1 / 3)
-      g = this.getRGB(q, p, h)
-      b = this.getRGB(q, p, h - 1 / 3)
+    const a = s * Math.min(l, 1 - l)
+    //  Funcion obtenida de https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
+    const f = function (n) {
+      const k = (n + h / 30) % 12
+      return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
     }
-
     return {
-      r: r,
-      g: g,
-      b: b
+      r: f(0),
+      g: f(8),
+      b: f(4)
     }
   }
 }
