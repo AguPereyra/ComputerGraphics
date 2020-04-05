@@ -1,4 +1,5 @@
 const glMatrix = require('gl-matrix')
+
 class Mesh {
   constructor (geometry, material) {
     this._geometry = geometry

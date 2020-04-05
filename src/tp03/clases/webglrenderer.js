@@ -3,7 +3,7 @@ class WebGLRenderer {
     this._gl = canvas.getContext('webgl')
   }
 
-  render (scene) {
+  render (scene, camera) {
     //  Dibujar puntos
     //  --------------
     const vsSource = require('./shaders/vertex-shader.glsl')
@@ -34,6 +34,12 @@ class WebGLRenderer {
       //  Asignar Model Matrix
       const uModelMatrix = this._gl.getUniformLocation(program, 'uModelMatrix')
       this._gl.uniformMatrix4fv(uModelMatrix, false, mesh.modelMatrix)
+      //  Asignar View Matrix
+      const uViewMatrix = this._gl.getUniformLocation(program, 'uViewMatrix')
+      this._gl.uniformMatrix4fv(uViewMatrix, false, camera.viewMatrix)
+      //  Asignar Projection Matrix
+      const uProjectionMatrix = this._gl.getUniformLocation(program, 'uProjectionMatrix')
+      this._gl.uniformMatrix4fv(uProjectionMatrix, false, camera.projectionMatrix)
       //  Dibujar puntos
       this._draw(iboData, mesh._drawAsTriangle)
     }

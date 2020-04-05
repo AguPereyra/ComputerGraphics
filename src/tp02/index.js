@@ -10,48 +10,34 @@ const Dat = require('dat.gui')
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
 
-//  Parametros de los poligonos a dibujar
-const statePol1 = {
-  edges: 4,
-  color: function () {
-    let colors = []
-    for (let i = 0; i < this.edges; i++) {
-      colors.push(0.5, 1.0, 0.0, 1.0)
-    }
-    return new Float32Array(colors)
-  }
-}
+const edges = [4, 6, 20] //  Arreglo que tendrá la cantidad de vértices de los polígonos
+const colors = [
+  [0.5, 1.0, 0.0, 1.0],
+  [1.0, 0.0, 0.0, 1.0],
+  [0.0, 1.0, 1.0, 1.0]
+] //  Arreglo que tendrá el color de cada polígono
 
-const statePol2 = {
-  edges: 6,
-  color: function () {
-    let colors = []
-    for (let i = 0; i < this.edges; i++) {
-      colors.push(1.0, 0.0, 0.0, 1.0)
-    }
-    return new Float32Array(colors)
+//  Función que genera el arreglo Float32Array
+//  del largo necesario para establecer el color en todos los
+//  vértices de la figura. El color que establece es el pasado
+//  por parámetros.
+//  Se espera que color sea un vector en rgba.
+function generateColorsArray (color, edges) {
+  let colors = []
+  for (let i = 0; i < edges; i++) {
+    colors.push(color[0], color[1], color[2], color[3])
   }
-}
-
-const statePol3 = {
-  edges: 20,
-  color: function () {
-    let colors = []
-    for (let i = 0; i < this.edges; i++) {
-      colors.push(0.0, 1.0, 1.0, 1.0)
-    }
-    return new Float32Array(colors)
-  }
+  return new Float32Array(colors)
 }
 
 //  Polígonos en las mallas a renderizar
 let meshes = []
-const pol1 = new RegPol(statePol1.edges)
-const pol2 = new RegPol(statePol2.edges)
-const pol3 = new RegPol(statePol3.edges)
-meshes[0] = new Mesh(pol1, statePol1.color())
-meshes[1] = new Mesh(pol2, statePol2.color())
-meshes[2] = new Mesh(pol3, statePol3.color())
+//  Generar polígonos e insertar en los meshes
+for (let i = 0; i < 3; i++) {
+  let pol = new RegPol(edges[i])
+  let polColor = generateColorsArray(colors[i], edges[i])
+  meshes[i] = new Mesh(pol, polColor)
+}
 
 //  Función que dibuja los vertices
 //  positivos XY con rojo y verde en
@@ -80,7 +66,7 @@ function _defaultVertexes () {
   geometry._faces = indexes
   //  Crear mesh
   const mesh = new Mesh(geometry, colors)
-  mesh._drawAsTriangle = false
+  mesh._drawAsTriangle = false // Dibujar meshes con LINES y no con TRIANGLES
   return mesh
 }
 
