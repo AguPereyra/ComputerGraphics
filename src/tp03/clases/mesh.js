@@ -32,7 +32,7 @@ class Mesh {
     this._modelMatrix = glMatrix.mat4.fromRotationTranslationScale(tempMatrix,
       [c, 0, 0, s],
       [this._tx, this._ty, this._tz],
-      [this._sx, this._sy, 1])
+      [this._sx, this._sy, this._sz])
   }
 
   //  Getter que se asegura que la

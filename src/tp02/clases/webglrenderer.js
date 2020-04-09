@@ -15,7 +15,7 @@ class WebGLRenderer {
     //  Limpiar pantalla
     //  Color de limpiado
     this._gl.clearColor(scene._clearColor.r, scene._clearColor.g, scene._clearColor.b, scene._clearColor.a)
-    //  Limpiar <canvas>
+    //  Limpiar buffer
     this._gl.clear(this._gl.COLOR_BUFFER_BIT)
 
     //  Dibujar cada mesh, en orden

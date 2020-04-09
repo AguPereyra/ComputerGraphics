@@ -45,10 +45,10 @@ for (let i = 0; i < 3; i++) {
 function _defaultVertexes () {
   //  Ejes
   const vertices = new Float32Array([
-    0.0, 0.0, 0.0, //  Línea roja
-    0.0, 0.0, 0.0, //  Línea verde
-    1.0, 0.0, 0.0, //  Línea roja
-    0.0, -1.0, 0.0 //  Línea verde
+    0.0, 0.0, 0.0, //  X
+    0.0, 0.0, 0.0, //  Y
+    1.0, 0.0, 0.0, //  X
+    0.0, -1.0, 0.0 //  Y
   ])
   const indexes = new Uint16Array([
     0, 2,

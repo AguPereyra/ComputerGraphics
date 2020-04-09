@@ -12,11 +12,13 @@ class WebGLRenderer {
     //  Compilar programa
     const program = this._compileProgram(vsSource, fsSource)
 
+    //  Activar DEPTH_TEST
+    this._gl.enable(this._gl.DEPTH_TEST)
     //  Limpiar pantalla
     //  Color de limpiado
     this._gl.clearColor(scene._clearColor.r, scene._clearColor.g, scene._clearColor.b, scene._clearColor.a)
-    //  Limpiar <canvas>
-    this._gl.clear(this._gl.COLOR_BUFFER_BIT)
+    //  Limpiar buffers
+    this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT)
 
     //  Dibujar cada mesh, en orden
     let i = 0
