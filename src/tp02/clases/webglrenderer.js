@@ -23,9 +23,9 @@ class WebGLRenderer {
     for (i; i < scene._meshes.length; i++) {
       let mesh = scene._meshes[i]
 
-      const vboData = mesh._geometry._vertices
-      const iboData = mesh._geometry._faces
-      const cboData = mesh._material
+      const vboData = mesh._geometry._vertices //  Vertices
+      const iboData = mesh._geometry._faces //  Indices
+      const cboData = mesh._material //  Colores
 
       //  Asignar valores de los vertices
       this._bindDataBuffer(vboData, 'aPosition', program, 3)
@@ -89,10 +89,9 @@ class WebGLRenderer {
   }
 
   //  Función que dibuja la figura en función
-  //  de los índices pasados por parámetros, y
-  //  del color de limpiado de la escena.
+  //  de los índices pasados por parámetros.
   //  Dibuja usando triangulos si triangles es verdadero,
-  //  sino dibuja con lineas.
+  //  sino dibuja con lineas (en caso de dibujar ejes).
   _draw (iboData, triangles) {
     //  Buffer Indices
     const ibo = this._gl.createBuffer()

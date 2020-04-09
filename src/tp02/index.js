@@ -48,7 +48,7 @@ function _defaultVertexes () {
     0.0, 0.0, 0.0, //  X
     0.0, 0.0, 0.0, //  Y
     1.0, 0.0, 0.0, //  X
-    0.0, -1.0, 0.0 //  Y
+    0.0, 1.0, 0.0 //  Y
   ])
   const indexes = new Uint16Array([
     0, 2,
@@ -106,7 +106,7 @@ for (let i = 0; i < meshes.length; i++) {
   polGui[i].add(meshes[i], '_tx').min(-5).max(5).step(0.01)
   polGui[i].add(meshes[i], '_ty').min(-5).max(5).step(0.01)
   polGui[i].add(meshes[i], '_tz').min(-5).max(5).step(0.01)
-  polGui[i].add(meshes[i], '_rz').min(0).max(2 * Math.PI).step(0.01)
+  polGui[i].add(meshes[i], '_rz').min(0).max(360).step(0.1)
   polGui[i].add(meshes[i], '_sx').min(0).step(0.1)
   polGui[i].add(meshes[i], '_sy').min(0).step(0.1)
 }

@@ -3,8 +3,8 @@ const Geometry = require('./geometry')
 class RegularConvexPolygonGeometry extends Geometry {
   constructor (edges) {
     super()
-    //  Revisar que edges > 3
-    if (edges <= 3) {
+    //  Revisar que edges >= 3
+    if (edges < 3) {
       throw new Error('Edges expected to be greater or equal to 4, but ' + edges + ' received insted.')
     }
     this.edges = edges
