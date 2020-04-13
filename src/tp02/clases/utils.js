@@ -13,6 +13,8 @@ class Utils {
   //  vértices de la figura. El color que establece es el pasado
   //  por parámetros.
   //  Se espera que color sea un vector en rgba.
+  //  edges es el arreglo que contiene en cada índice la cantidad de
+  //  vértices de cada figura. Osea 1 índice -> 1 figura.
   static generateColorsArray (color, edges) {
     let colors = []
     for (let i = 0; i < edges; i++) {

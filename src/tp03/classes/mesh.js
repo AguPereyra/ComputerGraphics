@@ -24,17 +24,14 @@ class Mesh {
   //  y la traslación indicadas por las propiedades internas.
   updateModelMatrix () {
     let tempMatrix = glMatrix.mat4.create() //  Crear matriz de identidad
-    // Definimos el Quaternion (C, X*S, Y*S, Z*S)
-    //  C = COS(θ/2)
-    const c = Math.cos(this._rz / 2)
-    //  S = SEN(θ/2)
-    const s = Math.sin(this._rz / 2)
+    // Definimos el Quaternion
+    let quaternion = glMatrix.quat.create()
+    quaternion = glMatrix.quat.fromEuler(quaternion, this._rx, this._ry, this._rz)
     this._modelMatrix = glMatrix.mat4.fromRotationTranslationScale(tempMatrix,
-      [c, 0, 0, s],
+      quaternion,
       [this._tx, this._ty, this._tz],
       [this._sx, this._sy, this._sz])
   }
-
   //  Getter que se asegura que la
   //  matriz modelo esté actualizada
   get modelMatrix () {

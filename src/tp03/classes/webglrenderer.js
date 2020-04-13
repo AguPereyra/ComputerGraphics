@@ -25,9 +25,9 @@ class WebGLRenderer {
     for (i; i < scene._meshes.length; i++) {
       let mesh = scene._meshes[i]
 
-      const vboData = mesh._geometry._vertices
-      const iboData = mesh._geometry._faces
-      const cboData = mesh._material
+      const vboData = new Float32Array(mesh._geometry._vertices)
+      const iboData = new Uint16Array(mesh._geometry._faces)
+      const cboData = new Float32Array(mesh._material)
 
       //  Asignar valores de los vertices
       this._bindDataBuffer(vboData, 'aPosition', program, 3)
