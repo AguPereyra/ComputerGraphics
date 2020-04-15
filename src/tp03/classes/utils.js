@@ -73,29 +73,32 @@ class Utils {
     return mesh
   }
   //  Función que dibuja una grilla, con el color
-  //  pasado por parámetros, entre los puntos indicados por parámetros.
-  //  [x,y,z]Range deben contener los valores mínimos y máximos de cada eje,
+  //  pasado por parámetros, entre los puntos indicados por parámetros, en
+  //  el plano paralelo a XZ.
+  //  [x,z]Range deben contener los valores mínimos (en índice 0) y máximos (en índice 1)
+  //  de cada eje, yPos contiene la posición en Y del plano,
   //  y color debe ser un arreglo con los valores de r,g,b,a que se usarán.
   //  Ejemplo de arreglo color:[1.0, 1.0, 0.0, 1.0]
-  static generateGrid (xRange, yRange, zRange, color) {
+  static generateGrid (xRange, yPos, zRange, color) {
     let vertices = []
     let indexes = []
+    let posZ = 0
     for (let x = xRange[0]; x <= xRange[1]; x++) {
-      for (let y = yRange[0]; y <= yRange[1]; y++) {
-        for (let z = zRange[0]; z <= zRange[1]; z++) {
-          vertices.push(x, y, z)
-        }
+      indexes.push(posZ) // Punto menor a unir para este x
+      for (let z = zRange[0]; z <= zRange[1]; z++) {
+        vertices.push(x, yPos, z)
+        posZ++ //  Nos desplazamos en los indices
       }
+      indexes.push(posZ - 1) // Punto mayor a unir para este x
     }
-    //  Generar índices correspondientes,
-    //  uniendo los puntos de a cuatro.
-    //  Se que (N-4)/2 + 1 da la
-    //  cantidad cuadrados que se tienen
-    const squares = (vertices.length - 4) / 2 + 1
-    for (let pivot = 0; pivot < squares; pivot++) {
-      //  Definir los triangulos internos
-      indexes.push(pivot, pivot + 1, pivot + 3)
-      indexes.push(pivot, pivot + 4, pivot + 3)
+    //  Indices para los ejes X
+    const zNorm = Math.abs(zRange[0]) + Math.abs(zRange[1])
+    let posXMin = 0
+    let posXMax = vertices.length / 3 - zNorm - 1
+    for (let z = zRange[0]; z <= zRange[1]; z++) {
+      indexes.push(posXMin, posXMax)
+      posXMin++ //  Nos movemos al proximo punto
+      posXMax++ //  Vamos al anterior
     }
     //  Generar colores
     const colors = this.generateColorsArray(color, vertices.length)
@@ -104,6 +107,8 @@ class Utils {
     geometry._faces = indexes
     geometry._vertices = vertices
     const mesh = new Mesh(geometry, colors)
+    //  Indicar que se dibuje con lineas
+    mesh._drawAsTriangle = false
     return mesh
   }
 

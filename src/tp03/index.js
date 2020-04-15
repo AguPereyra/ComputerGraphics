@@ -9,6 +9,7 @@ const Mesh = require('./classes/mesh')
 const ConeGeometry = require('./classes/figures/coneGeometry')
 const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
+const SphereGeometry = require('./classes/figures/sphereGeometry')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -37,27 +38,29 @@ let perspectiveGui = {
   far: 1000
 }
 
-const edges = [4, 6, 20] //  Arreglo que tendrá la cantidad de vértices de los polígonos
 const colors = [
   [0.5, 1.0, 0.0, 1.0],
   [1.0, 0.0, 0.0, 1.0],
-  [0.0, 1.0, 1.0, 1.0]
+  [0.0, 1.0, 1.0, 1.0],
+  [1.0, 0.0, 1.0, 1.0]
 ] //  Arreglo que tendrá el color de cada polígono
 
-//  Polígonos en las mallas a renderizar
-let meshes = Utils.generatePolMeshes(edges, colors)
-//  Generar Cono, Cubo y Cilindro
-const cone = new ConeGeometry(1, 1)
-const cube = new CubeGeometry(1)
-const cylinder = new CylinderGeometry(1)
+let meshes = []
+//  Generar Cono, Cubo, Cilindro y Esfera
+//  const cone = new ConeGeometry(1, 1)
+//  const cube = new CubeGeometry(1)
+//  const cylinder = new CylinderGeometry(1)
+const sphere = new SphereGeometry(1)
 
-//  Meter cono en malla
+//  Meter en malla
 const coneColor = Utils.generateColorsArray(colors[1], 17)
 const cubeColor = Utils.generateColorsArray(colors[0], 8)
 const cylinderColor = Utils.generateColorsArray(colors[2], 32)
-meshes.push(new Mesh(cone, coneColor))
-meshes.push(new Mesh(cube, cubeColor))
-meshes.push(new Mesh(cylinder, cylinderColor))
+const sphereColor = Utils.generateColorsArray(colors[3], sphere._vertices.length)
+//meshes.push(new Mesh(cone, coneColor))
+//meshes.push(new Mesh(cube, cubeColor))
+//meshes.push(new Mesh(cylinder, cylinderColor))
+meshes.push(new Mesh(sphere, sphereColor))
 
 //  Cámaras
 let cameras = []
@@ -72,7 +75,7 @@ cameras[1] = new OrtographicCamera(orthoGui.left, orthoGui.right, orthoGui.botto
 //  Ejes
 const axes = Utils.defaultVertexes()
 //  Grilla
-const grid = Utils.generateGrid([-10, 10], [0, 0], [-10, 10], [0.5, 0.5, 0.5, 1.0])
+const grid = Utils.generateGrid([-10, 10], 0, [-10, 10], [0.5, 0.5, 0.5, 1.0])
 //  Escena
 const scene = new Scene({
   r: 0,
