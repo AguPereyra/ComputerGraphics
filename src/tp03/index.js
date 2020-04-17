@@ -6,7 +6,6 @@ const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
 const OrtographicCamera = require('./classes/camera/ortographicCamera')
 const Utils = require('./classes/utils')
 const Mesh = require('./classes/mesh')
-const ConeGeometry = require('./classes/figures/coneGeometry')
 const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
@@ -20,6 +19,9 @@ const canvas = document.getElementById('c')
 let camarasGui = {
   camara: 0,
 }
+//  figures: arreglo con los nombres para el GUI
+//  de cada figura, en orden
+const figures = ['Cube', 'Sphere', 'Cylinder', 'Cone']
 // --------------------------------
 //  Valores por defecto
 const gl = canvas.getContext('webgl')
@@ -47,20 +49,21 @@ const colors = [
 
 let meshes = []
 //  Generar Cono, Cubo, Cilindro y Esfera
-//  const cone = new ConeGeometry(1, 1)
-//  const cube = new CubeGeometry(1)
-//  const cylinder = new CylinderGeometry(1)
+const cube = new CubeGeometry(1)
 const sphere = new SphereGeometry(1)
+const cylinder = new CylinderGeometry(1, [1, 1])
+const cone = new CylinderGeometry(1, [1, 0])
 
 //  Meter en malla
-const coneColor = Utils.generateColorsArray(colors[1], 17)
 const cubeColor = Utils.generateColorsArray(colors[0], 8)
-const cylinderColor = Utils.generateColorsArray(colors[2], 32)
 const sphereColor = Utils.generateColorsArray(colors[3], sphere._vertices.length)
-//meshes.push(new Mesh(cone, coneColor))
-//meshes.push(new Mesh(cube, cubeColor))
-//meshes.push(new Mesh(cylinder, cylinderColor))
+const cylinderColor = Utils.generateColorsArray(colors[2], 32)
+const coneColor = Utils.generateColorsArray(colors[1], 17)
+
+meshes.push(new Mesh(cube, cubeColor))
 meshes.push(new Mesh(sphere, sphereColor))
+meshes.push(new Mesh(cylinder, cylinderColor))
+meshes.push(new Mesh(cone, coneColor))
 
 //  Cámaras
 let cameras = []
@@ -105,6 +108,7 @@ window.requestAnimationFrame(main)
 const args = {
   meshes: meshes,
   camarasGui: camarasGui,
-  cameras: cameras
+  cameras: cameras,
+  figures: figures
 }
 Utils.generateDatGui(args)

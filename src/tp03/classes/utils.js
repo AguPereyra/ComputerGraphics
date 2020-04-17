@@ -118,27 +118,27 @@ class Utils {
     const meshes = args.meshes
     const camarasGui = args.camarasGui
     const cameras = args.cameras
+    const figures = args.figures
     //  DatGUI
     const gui = new Dat.GUI()
-    //  Polígonos
-    const polFolder = gui.addFolder('Polygons')
-    const polGui = []
+    //  Figuras
+    const figuresFolder = gui.addFolder('Figures')
+    let figuresGui = []
     for (let i = 0; i < meshes.length; i++) {
-      polGui.push(polFolder.addFolder('Polygon ' + i))
-      polGui[i].add(meshes[i], '_tx').min(-5).max(5).step(0.01)
-      polGui[i].add(meshes[i], '_ty').min(-5).max(5).step(0.01)
-      polGui[i].add(meshes[i], '_tz').min(-5).max(5).step(0.01)
-      polGui[i].add(meshes[i], '_rx').min(0).max(360).step(0.1)
-      polGui[i].add(meshes[i], '_ry').min(0).max(360).step(0.1)
-      polGui[i].add(meshes[i], '_rz').min(0).max(360).step(0.1)
-      polGui[i].add(meshes[i], '_sx').min(0).step(0.1)
-      polGui[i].add(meshes[i], '_sy').min(0).step(0.1)
-      polGui[i].add(meshes[i], '_sz').min(0).step(0.1)
+      figuresGui.push(figuresFolder.addFolder(figures[i]))
+      figuresGui[i].add(meshes[i], '_tx').min(-5).max(5).step(0.01)
+      figuresGui[i].add(meshes[i], '_ty').min(-5).max(5).step(0.01)
+      figuresGui[i].add(meshes[i], '_tz').min(-5).max(5).step(0.01)
+      figuresGui[i].add(meshes[i], '_rx').min(0).max(360).step(0.1)
+      figuresGui[i].add(meshes[i], '_ry').min(0).max(360).step(0.1)
+      figuresGui[i].add(meshes[i], '_rz').min(0).max(360).step(0.1)
+      figuresGui[i].add(meshes[i], '_sx').min(0).step(0.1)
+      figuresGui[i].add(meshes[i], '_sy').min(0).step(0.1)
+      figuresGui[i].add(meshes[i], '_sz').min(0).step(0.1)
     }
     //  Cámaras
     const camaraFolder = gui.addFolder('Camera')
     camaraFolder.add(camarasGui, 'camara', { Perspective: 0, Orthographic: 1 })
-
     //  Cámara de Proyección Ortográfica
     const orthoFolder = camaraFolder.addFolder('Orthographic Camera')
     orthoFolder.add(cameras[1], '_left').min(-1000).max(0).step(0.01)
