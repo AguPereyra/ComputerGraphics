@@ -25,14 +25,22 @@ class WebGLRenderer {
     for (i; i < scene._meshes.length; i++) {
       let mesh = scene._meshes[i]
 
+      //  Crear cache de buffers si no existe
+      if (!scene._meshes[i].cache) {
+        scene._meshes[i].cache = {}
+        scene._meshes[i].cache.cbo = this._gl.createBuffer()
+        scene._meshes[i].cache.ibo = this._gl.createBuffer()
+        scene._meshes[i].cache.vbo = this._gl.createBuffer()
+      }
+      //  Data to buffers
       const vboData = new Float32Array(mesh._geometry._vertices)
       const iboData = new Uint16Array(mesh._geometry._faces)
       const cboData = new Float32Array(mesh._material)
 
       //  Asignar valores de los vertices
-      this._bindDataBuffer(vboData, 'aPosition', program, 3)
+      this._bindDataBuffer(scene._meshes[i].cache.vbo, vboData, 'aPosition', program, 3)
       //  Asignar colores
-      this._bindDataBuffer(cboData, 'aColor', program, 4)
+      this._bindDataBuffer(scene._meshes[i].cache.cbo, cboData, 'aColor', program, 4)
       //  Asignar Model Matrix
       const uModelMatrix = this._gl.getUniformLocation(program, 'uModelMatrix')
       this._gl.uniformMatrix4fv(uModelMatrix, false, mesh.modelMatrix)
@@ -43,17 +51,16 @@ class WebGLRenderer {
       const uProjectionMatrix = this._gl.getUniformLocation(program, 'uProjectionMatrix')
       this._gl.uniformMatrix4fv(uProjectionMatrix, false, camera.projectionMatrix)
       //  Dibujar puntos
-      this._draw(iboData, mesh._drawAsTriangle)
+      this._draw(scene._meshes[i].cache.ibo, iboData, mesh._drawAsTriangle)
     }
   }
-
   //  Función que vincula los datos del arreglo
   //  pasados por parámetros con la variable
-  //  (pasada por parámetros).
+  //  (pasada por parámetros), usando el buffer
+  //  bo.
   //  size indica de a cuántos datos se lee el arreglo.
-  _bindDataBuffer (boData, variable, program, size) {
+  _bindDataBuffer (bo, boData, variable, program, size) {
     // Crear el Color Buffer Object
-    const bo = this._gl.createBuffer()
     this._gl.bindBuffer(this._gl.ARRAY_BUFFER, bo)
     this._gl.bufferData(this._gl.ARRAY_BUFFER, boData, this._gl.STATIC_DRAW)
 
@@ -101,9 +108,8 @@ class WebGLRenderer {
   //  del color de limpiado de la escena.
   //  Dibuja usando triangulos si triangles es verdadero,
   //  sino dibuja con lineas.
-  _draw (iboData, triangles) {
+  _draw (ibo, iboData, triangles) {
     //  Buffer Indices
-    const ibo = this._gl.createBuffer()
     this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, ibo)
 
     //  Poner datos en el buffer

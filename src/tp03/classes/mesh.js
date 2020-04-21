@@ -14,29 +14,21 @@ class Mesh {
     this._sy = 1.0
     this._sz = 1.0
     this._drawAsTriangle = true
-    //  Matriz 'Model', que aplica traslación en x,y,z;
-    //  rotación en z; escalamiento en x e y.
-    this._modelMatrix = glMatrix.mat4.create()
-    this.updateModelMatrix()
+    //  Guardar la matriz identidad para mejorar la performance
+    this._identityMatrix = glMatrix.mat4.create()
   }
   //  Función que calcula la matriz modelo
   //  aplicandole el escalamiento, la rotación
   //  y la traslación indicadas por las propiedades internas.
-  updateModelMatrix () {
-    let tempMatrix = glMatrix.mat4.create() //  Crear matriz de identidad
+  //  Luego retorna el resultado del calculo.
+  get modelMatrix () {
     // Definimos el Quaternion
     let quaternion = glMatrix.quat.create()
     quaternion = glMatrix.quat.fromEuler(quaternion, this._rx, this._ry, this._rz)
-    this._modelMatrix = glMatrix.mat4.fromRotationTranslationScale(tempMatrix,
+    return glMatrix.mat4.fromRotationTranslationScale(this._identityMatrix,
       quaternion,
       [this._tx, this._ty, this._tz],
       [this._sx, this._sy, this._sz])
-  }
-  //  Getter que se asegura que la
-  //  matriz modelo esté actualizada
-  get modelMatrix () {
-    this.updateModelMatrix()
-    return this._modelMatrix
   }
 }
 
