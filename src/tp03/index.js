@@ -4,11 +4,12 @@ const WebGLRend = require('./classes/webglrenderer')
 const Scene = require('./classes/scene')
 const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
 const OrtographicCamera = require('./classes/camera/ortographicCamera')
-const Utils = require('./classes/utils')
+const Utils = require('./classes/utils/utils')
 const Mesh = require('./classes/mesh')
 const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
+const ObserverCamera = require('./classes/utils/observerCamera')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -17,7 +18,7 @@ const canvas = document.getElementById('c')
 // Variables para DAT GUI
 //  camarasGui representa la camara en uso.
 let camarasGui = {
-  camara: 0,
+  camara: 1,
 }
 //  figures: arreglo con los nombres para el GUI
 //  de cada figura, en orden
@@ -45,7 +46,7 @@ const colors = [
   [1.0, 0.0, 0.0, 1.0],
   [0.0, 1.0, 1.0, 1.0],
   [1.0, 0.0, 1.0, 1.0]
-] //  Arreglo que tendrá el color de cada polígono
+] //  Arreglo que tendrá el color de cada figura
 
 let meshes = []
 //  Generar Cono, Cubo, Cilindro y Esfera
@@ -54,12 +55,12 @@ const sphere = new SphereGeometry(1)
 const cylinder = new CylinderGeometry(1, [1, 1])
 const cone = new CylinderGeometry(1, [1, 0])
 
-//  Meter en malla
-const cubeColor = Utils.generateColorsArray(colors[0], 8)
+//  Colores
+const cubeColor = Utils.generateColorsArray(colors[0], cube._vertices.length)
 const sphereColor = Utils.generateColorsArray(colors[3], sphere._vertices.length)
-const cylinderColor = Utils.generateColorsArray(colors[2], 32)
-const coneColor = Utils.generateColorsArray(colors[1], 17)
-
+const cylinderColor = Utils.generateColorsArray(colors[2], cylinder._vertices.length)
+const coneColor = Utils.generateColorsArray(colors[1], cone._vertices.length)
+//  Meter en malla
 meshes.push(new Mesh(cube, cubeColor))
 meshes.push(new Mesh(sphere, sphereColor))
 meshes.push(new Mesh(cylinder, cylinderColor))
@@ -73,7 +74,9 @@ cameras[0] = new PerspectiveCamera(perspectiveGui.fovy, perspectiveGui.aspect,
 //  Ortográfica
 cameras[1] = new OrtographicCamera(orthoGui.left, orthoGui.right, orthoGui.bottom,
   orthoGui.top, orthoGui.near, orthoGui.far)
-
+//  Observer, que sirve para poder cambiar desde el dat.GUI
+//  los parametros de posicion de ambas camaras con una sola interfaz
+const observerCamera = new ObserverCamera(cameras[1], cameras[0])
 //  Crear cuadro con figuras a dibujar
 //  Ejes
 const axes = Utils.defaultVertexes()
@@ -109,6 +112,7 @@ const args = {
   meshes: meshes,
   camarasGui: camarasGui,
   cameras: cameras,
-  figures: figures
+  figures: figures,
+  observerCamera: observerCamera
 }
 Utils.generateDatGui(args)

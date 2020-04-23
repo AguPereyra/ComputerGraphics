@@ -24,7 +24,6 @@ class CubeGeometry extends Geometry {
         this._vertices.push(z, y, z)
         this._vertices.push(-z, y, z)
       }
-      console.log(y, 'type:', typeof y)
     }
     //  Generar indices
     //  Cuerpo
@@ -39,8 +38,6 @@ class CubeGeometry extends Geometry {
       this._faces.push(k1 + i, k1 + 3, k1 + 1 + i)
       this._faces.push(k2 + i, k2 + 1 + i, k2 + 3)
     }
-    console.log(this._vertices)
-    console.log(this._faces)
   }
 }
 

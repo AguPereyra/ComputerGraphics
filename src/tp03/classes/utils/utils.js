@@ -1,7 +1,7 @@
 const Dat = require('dat.gui')
-const Geometry = require('./figures/geometry')
-const Mesh = require('./mesh')
-const RegPol = require('./figures/regularConvexPolygonGeometry')
+const Geometry = require('../figures/geometry')
+const Mesh = require('../mesh')
+const RegPol = require('../figures/regularConvexPolygonGeometry')
 //  Clase que contiene funciones de utilidad
 //  para generar arreglos de un color,
 //  inicializar los meshes con poligonos,
@@ -119,10 +119,12 @@ class Utils {
     const camarasGui = args.camarasGui
     const cameras = args.cameras
     const figures = args.figures
+    const observerCamera = args.observerCamera
     //  DatGUI
-    const gui = new Dat.GUI()
+    const guiFigures = new Dat.GUI()
+    const guiCamera = new Dat.GUI()
     //  Figuras
-    const figuresFolder = gui.addFolder('Figures')
+    const figuresFolder = guiFigures.addFolder('Figures')
     let figuresGui = []
     for (let i = 0; i < meshes.length; i++) {
       figuresGui.push(figuresFolder.addFolder(figures[i]))
@@ -137,8 +139,23 @@ class Utils {
       figuresGui[i].add(meshes[i], '_sz').min(0).step(0.1)
     }
     //  Cámaras
-    const camaraFolder = gui.addFolder('Camera')
+    const camaraFolder = guiCamera.addFolder('Camera')
     camaraFolder.add(camarasGui, 'camara', { Perspective: 0, Orthographic: 1 })
+    //  Posición de la cámara
+    const cameraPosFolder = camaraFolder.addFolder('Position')
+    //  Posición del ojo
+    cameraPosFolder.add(observerCamera, 'eyeX').min(-10).max(10).step(0.1)
+    cameraPosFolder.add(observerCamera, 'eyeY').min(-10).max(10).step(0.1)
+    cameraPosFolder.add(observerCamera, 'eyeZ').min(-10).max(10).step(0.1)
+    //  Hacia donde se mira
+    cameraPosFolder.add(observerCamera, 'centerX').min(-10).max(10).step(0.1)
+    cameraPosFolder.add(observerCamera, 'centerY').min(-10).max(10).step(0.1)
+    cameraPosFolder.add(observerCamera, 'centerZ').min(-10).max(10).step(0.1)
+    //  Orientación de la camara
+    cameraPosFolder.add(observerCamera, 'upX').min(-10).max(10).step(0.1)
+    cameraPosFolder.add(observerCamera, 'upY').min(-10).max(10).step(0.1)
+    cameraPosFolder.add(observerCamera, 'upZ').min(-10).max(10).step(0.1)
+
     //  Cámara de Proyección Ortográfica
     const orthoFolder = camaraFolder.addFolder('Orthographic Camera')
     orthoFolder.add(cameras[1], '_left').min(-1000).max(0).step(0.01)
@@ -148,47 +165,12 @@ class Utils {
     orthoFolder.add(cameras[1], '_near').min(0).max(100).step(0.001)
     orthoFolder.add(cameras[1], '_far').min(0).max(1000).step(0.01)
 
-    //  Posición de la cámara
-    const cameraPosFolderOrtho = orthoFolder.addFolder('Position')
-    //  Posición del ojo
-    const eyeFolderOrtho = cameraPosFolderOrtho.addFolder('Eye')
-    eyeFolderOrtho.add(cameras[1], '_eyeX').min(-10).max(10).step(0.1)
-    eyeFolderOrtho.add(cameras[1], '_eyeY').min(-10).max(10).step(0.1)
-    eyeFolderOrtho.add(cameras[1], '_eyeZ').min(-10).max(10).step(0.1)
-    //  Hacia donde se mira
-    const centerFolderOrtho = cameraPosFolderOrtho.addFolder('Center')
-    centerFolderOrtho.add(cameras[1], '_centerX').min(-10).max(10).step(0.1)
-    centerFolderOrtho.add(cameras[1], '_centerY').min(-10).max(10).step(0.1)
-    centerFolderOrtho.add(cameras[1], '_centerZ').min(-10).max(10).step(0.1)
-    //  Orientación de la camara
-    const upCameraFolderOrtho = cameraPosFolderOrtho.addFolder('Up')
-    upCameraFolderOrtho.add(cameras[1], '_upX').min(-10).max(10).step(0.1)
-    upCameraFolderOrtho.add(cameras[1], '_upY').min(-10).max(10).step(0.1)
-    upCameraFolderOrtho.add(cameras[1], '_upZ').min(-10).max(10).step(0.1)
-
     //  Cámara de Proyección en Perspectiva
     const perspectiveFolder = camaraFolder.addFolder('Perspective Camera')
     perspectiveFolder.add(cameras[0], '_fovy').min(0).max(2 * Math.PI).step(0.01)
     perspectiveFolder.add(cameras[0], '_aspect')
     perspectiveFolder.add(cameras[0], '_near').min(0).max(100).step(0.001)
     perspectiveFolder.add(cameras[0], '_far').min(0).max(1000).step(0.01)
-    //  Posición de la cámara
-    const cameraPosFolderPerspective = perspectiveFolder.addFolder('Position')
-    //  Posición del ojo
-    const eyeFolderPerspective = cameraPosFolderPerspective.addFolder('Eye')
-    eyeFolderPerspective.add(cameras[0], '_eyeX').min(-10).max(10).step(0.1)
-    eyeFolderPerspective.add(cameras[0], '_eyeY').min(-10).max(10).step(0.1)
-    eyeFolderPerspective.add(cameras[0], '_eyeZ').min(-10).max(10).step(0.1)
-    //  Hacia donde se mira
-    const centerFolderPerspective = cameraPosFolderPerspective.addFolder('Center')
-    centerFolderPerspective.add(cameras[0], '_centerX').min(-10).max(10).step(0.1)
-    centerFolderPerspective.add(cameras[0], '_centerY').min(-10).max(10).step(0.1)
-    centerFolderPerspective.add(cameras[0], '_centerZ').min(-10).max(10).step(0.1)
-    //  Orientación de la camara
-    const upCameraFolderPerspective = cameraPosFolderPerspective.addFolder('Up')
-    upCameraFolderPerspective.add(cameras[0], '_upX').min(-10).max(10).step(0.1)
-    upCameraFolderPerspective.add(cameras[0], '_upY').min(-10).max(10).step(0.1)
-    upCameraFolderPerspective.add(cameras[0], '_upZ').min(-10).max(10).step(0.1)
   }
 }
 
