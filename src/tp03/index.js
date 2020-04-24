@@ -10,6 +10,7 @@ const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
+const OrbitalCamera = require('./classes/camera/orbitalCamera')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -74,9 +75,16 @@ cameras[0] = new PerspectiveCamera(perspectiveGui.fovy, perspectiveGui.aspect,
 //  Ortográfica
 cameras[1] = new OrtographicCamera(orthoGui.left, orthoGui.right, orthoGui.bottom,
   orthoGui.top, orthoGui.near, orthoGui.far)
+//  Camara rotacional
+cameras[2] = new OrbitalCamera(perspectiveGui.fovy, perspectiveGui.aspect,
+  perspectiveGui.near, perspectiveGui.far)
+
 //  Observer, que sirve para poder cambiar desde el dat.GUI
 //  los parametros de posicion de ambas camaras con una sola interfaz
-const observerCamera = new ObserverCamera(cameras[1], cameras[0])
+const observerCamera = new ObserverCamera({ perspectiveCamera: cameras[0],
+  orthoCamera: cameras[1],
+  orbitalCamera: cameras[2] })
+
 //  Crear cuadro con figuras a dibujar
 //  Ejes
 const axes = Utils.defaultVertexes()
