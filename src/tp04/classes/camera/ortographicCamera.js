@@ -14,7 +14,8 @@ class OrtographicCamera extends Camera {
   //  Función para que, antes de leer la matriz de proyección,
   //  se actualize con los valores necesarios
   get projectionMatrix () {
-    return glMatrix.mat4.ortho(glMatrix.mat4.create(), this._left, this._right,
+    const tempIdentity = Object.assign([], this._identityMatrix)
+    return glMatrix.mat4.ortho(tempIdentity, this._left, this._right,
       this._bottom, this._top, this._near, this._far)
   }
 }

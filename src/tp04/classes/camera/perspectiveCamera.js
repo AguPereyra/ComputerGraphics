@@ -12,7 +12,8 @@ class PerspectiveCamera extends Camera {
   //  Función para que, antes de leer la matriz de proyección,
   //  se actualize con los valores necesarios
   get projectionMatrix () {
-    return glMatrix.mat4.perspective(glMatrix.mat4.create(), this._fovy,
+    const tempIdentity = Object.assign([], this._identityMatrix)
+    return glMatrix.mat4.perspective(tempIdentity, this._fovy,
       this._aspect, this._near, this._far)
   }
 }

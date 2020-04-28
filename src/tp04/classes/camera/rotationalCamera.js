@@ -22,7 +22,8 @@ class RotationalCamera extends PerspectiveCamera {
     //  Roll
     this._upX = Math.cos(this._roll)
     this._upY = Math.sin(this._roll)
-    return glMatrix.mat4.lookAt(glMatrix.mat4.create(),
+    const tempIdentity = Object.assign([], this._identityMatrix)
+    return glMatrix.mat4.lookAt(tempIdentity,
       [this._eyeX, this._eyeY, this._eyeZ], //  Posicion del ojo
       [this._eyeX + this._dirX, this._eyeY + this._dirY, this._eyeZ + this._dirZ], //  Hacia donde veo, como vector
       [this._upX, this._upY, this._upZ]) //  Vector que orienta la camara

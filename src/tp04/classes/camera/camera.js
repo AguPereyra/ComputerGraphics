@@ -18,7 +18,8 @@ class Camera {
   //  cambió el valor de algunos de los parámetros, la
   //  matriz esté acorde.
   get viewMatrix () {
-    return glMatrix.mat4.lookAt(glMatrix.mat4.create(),
+    const tempIdentity = this._identityMatrix
+    return glMatrix.mat4.lookAt(tempIdentity,
       [this._eyeX, this._eyeY, this._eyeZ], //  Posicion del ojo
       [this._centerX, this._centerY, this._centerZ], //  Hacia donde veo
       [this._upX, this._upY, this._upZ]) //  Vector que orienta la camara

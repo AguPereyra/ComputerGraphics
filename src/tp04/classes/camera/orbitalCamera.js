@@ -11,7 +11,8 @@ class OrbitalCamera extends PerspectiveCamera {
   //  Sobreescribimos el retorno de la matriz de vista
   //  para aplicarle la orbitacion necesaria.
   get viewMatrix () {
-    let temp = glMatrix.mat4.lookAt(glMatrix.mat4.create(),
+    const tempIdentity = this._identityMatrix
+    let temp = glMatrix.mat4.lookAt(tempIdentity,
       [this._eyeX, this._eyeY, this._eyeZ], //  Posicion del ojo
       [this._centerX, this._centerY, this._centerZ], //  Hacia donde veo, como vector
       [this._upX, this._upY, this._upZ]) //  Vector que orienta la camara
