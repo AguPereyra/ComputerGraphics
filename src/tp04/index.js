@@ -2,16 +2,17 @@ console.log('tp04')
 console.log('NO OLVIDES LUZ DE AMBIENTE')
 
 const WebGLRend = require('./classes/webglrenderer')
-const Scene = require('./classes/scene')
+const Scene = require('./classes/scene/scene')
 const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
 const OrtographicCamera = require('./classes/camera/ortographicCamera')
 const Utils = require('./classes/utils/utils')
-const Mesh = require('./classes/mesh')
+const Mesh = require('./classes/scene/mesh')
 const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
 const OrbitalCamera = require('./classes/camera/orbitalCamera')
+const Light = require('./classes/light/light')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -64,9 +65,9 @@ const cylinderColor = Utils.generateColorsArray(colors[2], cylinder._vertices.le
 const coneColor = Utils.generateColorsArray(colors[1], cone._vertices.length)
 //  Meter en malla
 meshes.push(new Mesh(cube, cubeColor))
-meshes.push(new Mesh(sphere, sphereColor))
-meshes.push(new Mesh(cylinder, cylinderColor))
-meshes.push(new Mesh(cone, coneColor))
+// meshes.push(new Mesh(sphere, sphereColor))
+// meshes.push(new Mesh(cylinder, cylinderColor))
+// meshes.push(new Mesh(cone, coneColor))
 
 //  Cámaras
 let cameras = []
@@ -104,6 +105,10 @@ scene.addMesh(grid)
 for (let i = 0; i < meshes.length; i++) {
   scene.addMesh(meshes[i])
 }
+
+//  Setear luces
+//  Luz de ambiente
+scene._ambientLight = new Light([1.0, 1.0, 1.0])
 //  Obtener renderer
 const renderer = new WebGLRend(canvas)
 

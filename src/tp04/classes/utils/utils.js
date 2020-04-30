@@ -1,6 +1,6 @@
 const Dat = require('dat.gui')
 const Geometry = require('../figures/geometry')
-const Mesh = require('../mesh')
+const Mesh = require('../scene/mesh')
 const RegPol = require('../figures/regularConvexPolygonGeometry')
 //  Clase que contiene funciones de utilidad
 //  para generar arreglos de un color,

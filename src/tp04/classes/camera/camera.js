@@ -3,7 +3,7 @@ const glMatrix = require('gl-matrix')
 class Camera {
   constructor () {
     this._identityMatrix = glMatrix.mat4.create()
-    this._eyeX = -8
+    this._eyeX = 5.5
     this._eyeY = 5
     this._eyeZ = 5
     this._centerX = 0
