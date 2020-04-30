@@ -4,6 +4,7 @@ class Mesh {
   constructor (geometry, material) {
     this._geometry = geometry
     this._material = material
+    this._normalMatrix = null
     this._tx = 0
     this._ty = 0
     this._tz = 0
