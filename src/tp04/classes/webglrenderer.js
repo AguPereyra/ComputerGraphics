@@ -50,7 +50,8 @@ class WebglRenderer {
         uModelMatrix: mesh.modelMatrix,
         uLightColor: scene._ambientLight._color,
         uNormalMatrix: mesh.normalMatrix,
-        uViewPos: [0, 3, 3]
+        uLightPos: [0, 3, 3],
+        uViewPos: [camera._eyeX, camera._eyeY, camera._eyeZ]
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i])

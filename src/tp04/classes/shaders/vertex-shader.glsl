@@ -15,5 +15,5 @@ void main() {
   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * aPosition;
   vFragPos = vec3(uModelMatrix * aPosition);
   vColor = aColor;
-  vNormal = aNormal;
+  vNormal = mat3(uNormalMatrix) * aNormal;
 }
