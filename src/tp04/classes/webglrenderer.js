@@ -38,6 +38,7 @@ class WebglRenderer {
         const arrays = {
           aPosition: mesh._geometry._vertices,
           aColor: mesh._material,
+          aNormal: mesh._geometry.normals,
           indices: mesh._geometry._faces
         }
         this._cache.figures[i] = twgl.createBufferInfoFromArrays(this._gl, arrays)
@@ -47,7 +48,9 @@ class WebglRenderer {
         uProjectionMatrix: camera.projectionMatrix,
         uViewMatrix: camera.viewMatrix,
         uModelMatrix: mesh.modelMatrix,
-        uLightColor: scene._ambientLight._color
+        uLightColor: scene._ambientLight._color,
+        uNormalMatrix: mesh.normalMatrix,
+        uViewPos: [0, 3, 3]
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i])

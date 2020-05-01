@@ -31,6 +31,13 @@ class Mesh {
       [this._tx, this._ty, this._tz],
       [this._sx, this._sy, this._sz])
   }
+
+  //  Funcion que calcula la matrix normal
+  //  aplicando los calculos necesarios.
+  get normalMatrix () {
+    return glMatrix.mat4.transpose([],
+      glMatrix.mat4.invert([], this.modelMatrix))
+  }
 }
 
 module.exports = Mesh

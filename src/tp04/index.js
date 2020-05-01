@@ -118,6 +118,7 @@ function main () {
   window.requestAnimationFrame(main)
   //  Dibujar
   renderer.render(scene, cameras[camarasGui.camara])
+  console.log(meshes[0]._geometry.normals)
 }
 window.requestAnimationFrame(main)
 
