@@ -1,6 +1,9 @@
 class Light {
   constructor (color) {
-    this._color = color
+    this.color = {}
+    this.color.ambient = color.ambient
+    this.color.diffuse = color.diffuse
+    this.color.specular = color.specular
   }
 }
 

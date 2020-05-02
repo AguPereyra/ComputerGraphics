@@ -13,6 +13,8 @@ const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
 const OrbitalCamera = require('./classes/camera/orbitalCamera')
 const Light = require('./classes/light/light')
+const PointLight = require('./classes/light/pointLight')
+const Material = require('./classes/scene/material')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -63,11 +65,25 @@ const cubeColor = Utils.generateColorsArray(colors[0], cube._vertices.length)
 const sphereColor = Utils.generateColorsArray(colors[3], sphere._vertices.length)
 const cylinderColor = Utils.generateColorsArray(colors[2], cylinder._vertices.length)
 const coneColor = Utils.generateColorsArray(colors[1], cone._vertices.length)
+
+//  Crear propiedades de las figuras
+const cubeMaterial = {
+  surface: cubeColor,
+  ambient: [1.0, 0.5, 0.31],
+  diffuse: [1.0, 0.5, 0.31],
+  specular: [0.5, 0.5, 0.5],
+  shininess: 32.0
+}
+//  Crear Materiales para las figuras
+const materials = []
+materials.push(new Material(cubeMaterial))
+
 //  Meter en malla
-meshes.push(new Mesh(cube, cubeColor))
+meshes.push(new Mesh(cube, materials[0]))
 // meshes.push(new Mesh(sphere, sphereColor))
 // meshes.push(new Mesh(cylinder, cylinderColor))
 // meshes.push(new Mesh(cone, coneColor))
+
 
 //  Cámaras
 let cameras = []
@@ -108,7 +124,17 @@ for (let i = 0; i < meshes.length; i++) {
 
 //  Setear luces
 //  Luz de ambiente
-scene._ambientLight = new Light([1.0, 1.0, 1.0])
+scene._ambientLight = new Light({
+  ambient: [1.0, 1.0, 1.0],
+  diffuse: [0.5, 0.5, 0.5],
+  specular: [1.0, 1.0, 1.0]
+})
+
+scene._pointLight = new PointLight({ x: 0, y: 3, z: 3 }, {
+  ambient: [0.6, 0.6, 0.6],
+  diffuse: [0.5, 0.5, 0.5],
+  specular: [1.0, 1.0, 1.0]
+})
 //  Obtener renderer
 const renderer = new WebGLRend(canvas)
 

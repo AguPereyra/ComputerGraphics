@@ -55,14 +55,19 @@ class Utils {
       1, 4, // Y
       2, 5 // Z
     ])
-    const colors = new Float32Array([
-      1.0, 0.0, 0.0, 1.0, //  Rojo
-      0.0, 1.0, 0.0, 1.0, //  Verde
-      0.0, 0.0, 1.0, 1.0, //  Azul
-      1.0, 0.0, 0.0, 1.0, //  Rojo
-      0.0, 1.0, 0.0, 1.0, //  Verde
-      0.0, 0.0, 1.0, 1.0 //  Azul
-    ])
+    const colors = {
+      surface: [1.0, 0.0, 0.0, 1.0, //  Rojo
+        0.0, 1.0, 0.0, 1.0, //  Verde
+        0.0, 0.0, 1.0, 1.0, //  Azul
+        1.0, 0.0, 0.0, 1.0, //  Rojo
+        0.0, 1.0, 0.0, 1.0, //  Verde
+        0.0, 0.0, 1.0, 1.0 //  Azul
+      ],
+      ambient: [1.0, 1.0, 1.0],
+      diffuse: [1.0, 1.0, 1.0],
+      specular: [1.0, 1.0, 1.0],
+      shininess: 32
+    }
     //  Envolver en objeto Geometry
     const geometry = new Geometry()
     geometry._vertices = vertices
@@ -101,7 +106,14 @@ class Utils {
       posXMax++ //  Vamos al anterior
     }
     //  Generar colores
-    const colors = this.generateColorsArray(color, vertices.length)
+    const surface = this.generateColorsArray(color, vertices.length)
+    const colors = {
+      surface: surface,
+      ambient: [1.0, 1.0, 1.0],
+      diffuse: [1.0, 1.0, 1.0],
+      specular: [1.0, 1.0, 1.0],
+      shininess: 32
+    }
     //  Generar mesh
     const geometry = new Geometry()
     geometry._faces = indexes

@@ -37,7 +37,7 @@ class WebglRenderer {
       if (!this._cache.figures[i]) {
         const arrays = {
           aPosition: mesh._geometry._vertices,
-          aColor: mesh._material,
+          aColor: mesh._material.surface,
           aNormal: mesh._geometry.normals,
           indices: mesh._geometry._faces
         }
@@ -48,10 +48,16 @@ class WebglRenderer {
         uProjectionMatrix: camera.projectionMatrix,
         uViewMatrix: camera.viewMatrix,
         uModelMatrix: mesh.modelMatrix,
-        uLightColor: scene._ambientLight._color,
         uNormalMatrix: mesh.normalMatrix,
         uLightPos: [0, 3, 3],
-        uViewPos: [camera._eyeX, camera._eyeY, camera._eyeZ]
+        uViewPos: [camera._eyeX, camera._eyeY, camera._eyeZ],
+        'uMaterial.ambient': mesh._material.ambient,
+        'uMaterial.diffuse': mesh._material.diffuse,
+        'uMaterial.specular': mesh._material.specular,
+        'uMaterial.shininess': mesh._material.shininess,
+        'uPointLight.ambient': scene._pointLight.color.ambient,
+        'uPointLight.diffuse': scene._pointLight.color.diffuse,
+        'uPointLight.specular': scene._pointLight.color.specular,
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i])
@@ -87,7 +93,7 @@ class WebglRenderer {
         0, 1, 0, 0,
         0, 0, 1, 0,
         0, 3, 3, 1],
-      uLightColor: scene._ambientLight._color
+      uLightColor: scene._pointLight.color.ambient
     }
 
     twgl.setBuffersAndAttributes(this._gl, this._cache.programInfoLight, this._cache.lightBox)
