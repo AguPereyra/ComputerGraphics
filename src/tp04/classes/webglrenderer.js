@@ -37,7 +37,6 @@ class WebglRenderer {
       if (!this._cache.figures[i]) {
         const arrays = {
           aPosition: mesh._geometry._vertices,
-          aColor: mesh._material.surface,
           aNormal: mesh._geometry.normals,
           indices: mesh._geometry._faces
         }
@@ -49,15 +48,38 @@ class WebglRenderer {
         uViewMatrix: camera.viewMatrix,
         uModelMatrix: mesh.modelMatrix,
         uNormalMatrix: mesh.normalMatrix,
-        uLightPos: [0, 3, 3],
         uViewPos: [camera._eyeX, camera._eyeY, camera._eyeZ],
-        'uMaterial.ambient': mesh._material.ambient,
+        'uMaterial.ambient': mesh._material.diffuse,
         'uMaterial.diffuse': mesh._material.diffuse,
         'uMaterial.specular': mesh._material.specular,
         'uMaterial.shininess': mesh._material.shininess,
+        'uDirLight.direction': scene._ambientLight.direction,
+        'uDirLight.ambient': scene._ambientLight.color.ambient,
+        'uDirLight.diffuse': scene._ambientLight.color.diffuse,
+        'uDirLight.specular': scene._ambientLight.color.specular,
+        'uPointLight.position': [scene._pointLight._px,
+          scene._pointLight._py,
+          scene._pointLight._pz],
         'uPointLight.ambient': scene._pointLight.color.ambient,
         'uPointLight.diffuse': scene._pointLight.color.diffuse,
         'uPointLight.specular': scene._pointLight.color.specular,
+        'uPointLight.constant': scene._pointLight._constant,
+        'uPointLight.linear': scene._pointLight._linear,
+        'uPointLight.quadratic': scene._pointLight._quadratic,
+        'uSpotLight.position': [scene._spotLight._px,
+          scene._spotLight._py,
+          scene._spotLight._pz],
+        'uSpotLight.spotDirection': [scene._spotLight._sdX,
+          scene._spotLight._sdY,
+          scene._spotLight._sdZ],
+        'uSpotLight.innerCutOff': scene._spotLight._innerCutOff,
+        'uSpotLight.outerCutOff': scene._spotLight._outerCutOff,
+        'uSpotLight.ambient': scene._spotLight.color.ambient,
+        'uSpotLight.diffuse': scene._spotLight.color.diffuse,
+        'uSpotLight.specular': scene._spotLight.color.specular,
+        'uSpotLight.constant': scene._spotLight._constant,
+        'uSpotLight.linear': scene._spotLight._linear,
+        'uSpotLight.quadratic': scene._spotLight._quadratic,
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i])

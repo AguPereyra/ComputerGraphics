@@ -6,6 +6,10 @@ class PointLight extends Light {
     this._px = position.x
     this._py = position.y
     this._pz = position.z
+    //  Valores por defecto
+    this._constant = 1.0
+    this._linear = 0.09
+    this._quadratic = 0.032
   }
 }
 

@@ -12,8 +12,9 @@ const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
 const OrbitalCamera = require('./classes/camera/orbitalCamera')
-const Light = require('./classes/light/light')
+const AmbientLight = require('./classes/light/ambientLight')
 const PointLight = require('./classes/light/pointLight')
+const SpotLight = require('./classes/light/spotLight')
 const Material = require('./classes/scene/material')
 
 // Obtener canvas sobre el que dibujar
@@ -68,8 +69,6 @@ const coneColor = Utils.generateColorsArray(colors[1], cone._vertices.length)
 
 //  Crear propiedades de las figuras
 const cubeMaterial = {
-  surface: cubeColor,
-  ambient: [1.0, 0.5, 0.31],
   diffuse: [1.0, 0.5, 0.31],
   specular: [0.5, 0.5, 0.5],
   shininess: 32.0
@@ -83,7 +82,6 @@ meshes.push(new Mesh(cube, materials[0]))
 // meshes.push(new Mesh(sphere, sphereColor))
 // meshes.push(new Mesh(cylinder, cylinderColor))
 // meshes.push(new Mesh(cone, coneColor))
-
 
 //  Cámaras
 let cameras = []
@@ -107,7 +105,7 @@ const observerCamera = new ObserverCamera({ perspectiveCamera: cameras[0],
 //  Ejes
 const axes = Utils.defaultVertexes()
 //  Grilla
-const grid = Utils.generateGrid([-10, 10], 0, [-10, 10], [0.5, 0.5, 0.5, 1.0])
+const grid = Utils.generateGrid([-10, 10], 0, [-10, 10], [0.5, 0.5, 0.5])
 //  Escena
 const scene = new Scene({
   r: 0,
@@ -116,7 +114,9 @@ const scene = new Scene({
   a: 1
 })
 //  Preparar escena
-scene.addMesh(axes)
+for (let i = 0; i < axes.length; i++) {
+  scene.addMesh(axes[i])
+}
 scene.addMesh(grid)
 for (let i = 0; i < meshes.length; i++) {
   scene.addMesh(meshes[i])
@@ -124,17 +124,22 @@ for (let i = 0; i < meshes.length; i++) {
 
 //  Setear luces
 //  Luz de ambiente
-scene._ambientLight = new Light({
-  ambient: [1.0, 1.0, 1.0],
+scene._ambientLight = new AmbientLight([-0.2, -1.0, -0.3], {
+  ambient: [0.2, 0.2, 0.2],
   diffuse: [0.5, 0.5, 0.5],
   specular: [1.0, 1.0, 1.0]
 })
-
+//  Luz puntal
 scene._pointLight = new PointLight({ x: 0, y: 3, z: 3 }, {
   ambient: [0.6, 0.6, 0.6],
   diffuse: [0.5, 0.5, 0.5],
   specular: [1.0, 1.0, 1.0]
 })
+//  Luz focal
+scene._spotLight = new SpotLight({ x: 0.0, y: 5.0, z: 0.0 }, {
+  ambient: [0.2, 0.2, 0.2],
+  diffuse: [0.5, 0.5, 0.5],
+  specular: [1.0, 1.0, 1.0] }, { x: 0.0, y: -1.0, z: 0.0 }, { innerCutOff: 12.5 * Math.PI / 180, outerCutOff: 17.5 * Math.PI / 180 })
 //  Obtener renderer
 const renderer = new WebGLRend(canvas)
 

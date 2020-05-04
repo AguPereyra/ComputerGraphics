@@ -8,3 +8,5 @@ TODO:
 * Parametrizar AmbientStrength del fragment shader.
 * Falta: leer http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/ para entender la normal matrix. Implementar calculo de normal (https://iquilezles.org/www/articles/normals/normals.htm) luz difusa y especular.
 * Pasar todo de Model a ViewModel.
+* Asegurarse que la camara orbital afecta la luz especular.
+* PointLight y AmbientLight deberian recibir la posicion/direccion de la misma forma (no vector/objeto).

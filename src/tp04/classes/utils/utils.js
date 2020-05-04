@@ -38,44 +38,39 @@ class Utils {
     return meshes
   }
   //  Función que dibuja los vertices
-  //  positivos XY con rojo y verde en
-  //  una malla de la escena.
+  //  positivos XYZ con rojo, verde y azul en
+  //  3 mallas de la escena.
   static defaultVertexes () {
     //  Ejes
-    const vertices = new Float32Array([
+    const vertices = [
       0.0, 0.0, 0.0, // Línea roja (X)
-      0.0, 0.0, 0.0, // Línea verde (Y)
-      0.0, 0.0, 0.0, // Línea azul (Z)
       10.0, 0.0, 0.0, // Línea roja (X)
+      0.0, 0.0, 0.0, // Línea verde (Y)
       0.0, 10.0, 0.0, // Línea verde (Y)
+      0.0, 0.0, 0.0, // Línea azul (Z)
       0.0, 0.0, 10.0 // Línea azul (Z)
-    ])
-    const indexes = new Uint16Array([
-      0, 3, // X
-      1, 4, // Y
-      2, 5 // Z
-    ])
-    const colors = {
-      surface: [1.0, 0.0, 0.0, 1.0, //  Rojo
-        0.0, 1.0, 0.0, 1.0, //  Verde
-        0.0, 0.0, 1.0, 1.0, //  Azul
-        1.0, 0.0, 0.0, 1.0, //  Rojo
-        0.0, 1.0, 0.0, 1.0, //  Verde
-        0.0, 0.0, 1.0, 1.0 //  Azul
-      ],
-      ambient: [1.0, 1.0, 1.0],
-      diffuse: [1.0, 1.0, 1.0],
-      specular: [1.0, 1.0, 1.0],
-      shininess: 32
+    ]
+    const colors = [1.0, 0.0, 0.0,
+      0.0, 0.1, 0.0,
+      0.0, 0.0, 1.0]
+    //  Crear Meshes
+    const meshes = []
+    for (let i = 0; i < 9; i += 3) {
+      const geometry = new Geometry()
+      geometry._vertices.push(vertices[2 * i], vertices[2 * i + 1], vertices[2 * i + 2])
+      geometry._vertices.push(vertices[2 * i + 3], vertices[2 * i + 4], vertices[2 * i + 5])
+      geometry._faces = [0, 1]
+      geometry._normals = [vertices[2 * i + 3] / 10, vertices[2 * i + 4] / 10, vertices[2 * i + 5] / 10,
+        vertices[2 * i + 3] / 10, vertices[2 * i + 4] / 10, vertices[2 * i + 5] / 10]
+      const material = {
+        diffuse: [colors[i], colors[i + 1], colors[i + 2]],
+        specular: [1.0, 1.0, 1.0],
+        shininess: 1.0
+      }
+      meshes.push(new Mesh(geometry, material))
+      meshes[i / 3]._drawAsTriangle = false // Dibujar meshes con LINES y no con TRIANGLES
     }
-    //  Envolver en objeto Geometry
-    const geometry = new Geometry()
-    geometry._vertices = vertices
-    geometry._faces = indexes
-    //  Crear mesh
-    const mesh = new Mesh(geometry, colors)
-    mesh._drawAsTriangle = false // Dibujar meshes con LINES y no con TRIANGLES
-    return mesh
+    return meshes
   }
   //  Función que dibuja una grilla, con el color
   //  pasado por parámetros, entre los puntos indicados por parámetros, en
@@ -106,11 +101,8 @@ class Utils {
       posXMax++ //  Vamos al anterior
     }
     //  Generar colores
-    const surface = this.generateColorsArray(color, vertices.length)
     const colors = {
-      surface: surface,
-      ambient: [1.0, 1.0, 1.0],
-      diffuse: [1.0, 1.0, 1.0],
+      diffuse: color,
       specular: [1.0, 1.0, 1.0],
       shininess: 32
     }
@@ -140,9 +132,9 @@ class Utils {
     let figuresGui = []
     for (let i = 0; i < meshes.length; i++) {
       figuresGui.push(figuresFolder.addFolder(figures[i]))
-      figuresGui[i].add(meshes[i], '_tx').min(-5).max(5).step(0.01)
-      figuresGui[i].add(meshes[i], '_ty').min(-5).max(5).step(0.01)
-      figuresGui[i].add(meshes[i], '_tz').min(-5).max(5).step(0.01)
+      figuresGui[i].add(meshes[i], '_tx').min(-20).max(20).step(0.01)
+      figuresGui[i].add(meshes[i], '_ty').min(-20).max(20).step(0.01)
+      figuresGui[i].add(meshes[i], '_tz').min(-20).max(20).step(0.01)
       figuresGui[i].add(meshes[i], '_rx').min(0).max(360).step(0.1)
       figuresGui[i].add(meshes[i], '_ry').min(0).max(360).step(0.1)
       figuresGui[i].add(meshes[i], '_rz').min(0).max(360).step(0.1)

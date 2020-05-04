@@ -4,6 +4,7 @@ class Scene {
     this._meshes = []
     this._ambientLight = null
     this._pointLight = null
+    this._spotLight = null
   }
 
   addMesh (mesh) {
