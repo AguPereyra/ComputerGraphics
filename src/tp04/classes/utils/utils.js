@@ -120,10 +120,10 @@ class Utils {
   //  para el TP3
   static generateDatGui (args) {
     const meshes = args.meshes
-    const camarasGui = args.camarasGui
+    const camarasGui = args.datGui.camara
     const cameras = args.cameras
-    const figures = args.figures
-    const observerCamera = args.observerCamera
+    const figures = args.datGui.figures
+    const observerCamera = args.datGui.observerCamera
     //  DatGUI
     const guiFigures = new Dat.GUI()
     const guiCamera = new Dat.GUI()

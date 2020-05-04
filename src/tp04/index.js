@@ -19,40 +19,34 @@ const Material = require('./classes/scene/material')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
-
-// --------------------------------
-// Variables para DAT GUI
-//  camarasGui representa la camara en uso.
-let camarasGui = {
-  camara: 1,
-}
-//  figures: arreglo con los nombres para el GUI
-//  de cada figura, en orden
-const figures = ['Cube', 'Sphere', 'Cylinder', 'Cone']
-// --------------------------------
-//  Valores por defecto
 const gl = canvas.getContext('webgl')
-let orthoGui = {
-  left: -10,
-  right: 10,
-  far: 1000,
-  near: 0.001,
-  bottom: -10,
-  top: 10
+// ---------------------------------------
+//  Datos de contexto para la aplicacion.
+const context = {
+  gui: {
+    camara: {
+      camara: 1
+    },
+    figures: ['Cube', 'Sphere', 'Cylinder', 'Cone']
+  },
+  default: {
+    orthoGui: {
+      left: -10,
+      right: 10,
+      far: 1000,
+      near: 0.001,
+      bottom: -10,
+      top: 10
+    },
+    perspectiveGui: {
+      fovy: Math.PI / 4,
+      aspect: gl.canvas.width / gl.canvas.height,
+      near: 0.001,
+      far: 1000
+    }
+  }
 }
-let perspectiveGui = {
-  fovy: Math.PI / 4,
-  aspect: gl.canvas.width / gl.canvas.height,
-  near: 0.001,
-  far: 1000
-}
-
-const colors = [
-  [0.5, 1.0, 0.0, 1.0],
-  [1.0, 0.0, 0.0, 1.0],
-  [0.0, 1.0, 1.0, 1.0],
-  [1.0, 0.0, 1.0, 1.0]
-] //  Arreglo que tendrá el color de cada figura
+// ---------------------------------------
 
 let meshes = []
 //  Generar Cono, Cubo, Cilindro y Esfera
@@ -60,12 +54,6 @@ const cube = new CubeGeometry(1)
 const sphere = new SphereGeometry(1)
 const cylinder = new CylinderGeometry(1, [1, 1])
 const cone = new CylinderGeometry(1, [1, 0])
-
-//  Colores
-const cubeColor = Utils.generateColorsArray(colors[0], cube._vertices.length)
-const sphereColor = Utils.generateColorsArray(colors[3], sphere._vertices.length)
-const cylinderColor = Utils.generateColorsArray(colors[2], cylinder._vertices.length)
-const coneColor = Utils.generateColorsArray(colors[1], cone._vertices.length)
 
 //  Crear propiedades de las figuras
 const cubeMaterial = {
@@ -86,18 +74,18 @@ meshes.push(new Mesh(cube, materials[0]))
 //  Cámaras
 let cameras = []
 //  Perspectiva
-cameras[0] = new PerspectiveCamera(perspectiveGui.fovy, perspectiveGui.aspect,
-  perspectiveGui.near, perspectiveGui.far)
+cameras[0] = new PerspectiveCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
+  context.default.perspectiveGui.near, context.default.perspectiveGui.far)
 //  Ortográfica
-cameras[1] = new OrtographicCamera(orthoGui.left, orthoGui.right, orthoGui.bottom,
-  orthoGui.top, orthoGui.near, orthoGui.far)
+cameras[1] = new OrtographicCamera(context.default.orthoGui.left, context.default.orthoGui.right, context.default.orthoGui.bottom,
+  context.default.orthoGui.top, context.default.orthoGui.near, context.default.orthoGui.far)
 //  Camara rotacional
-cameras[2] = new OrbitalCamera(perspectiveGui.fovy, perspectiveGui.aspect,
-  perspectiveGui.near, perspectiveGui.far)
+cameras[2] = new OrbitalCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
+  context.default.perspectiveGui.near, context.default.perspectiveGui.far)
 
 //  Observer, que sirve para poder cambiar desde el dat.GUI
 //  los parametros de posicion de ambas camaras con una sola interfaz
-const observerCamera = new ObserverCamera({ perspectiveCamera: cameras[0],
+context.gui.observerCamera = new ObserverCamera({ perspectiveCamera: cameras[0],
   orthoCamera: cameras[1],
   orbitalCamera: cameras[2] })
 
@@ -130,16 +118,21 @@ scene._ambientLight = new AmbientLight([-0.2, -1.0, -0.3], {
   specular: [1.0, 1.0, 1.0]
 })
 //  Luz puntal
-scene._pointLight = new PointLight({ x: 0, y: 3, z: 3 }, {
+scene._pointLight = [new PointLight({ x: 0, y: 3, z: 3 }, {
   ambient: [0.6, 0.6, 0.6],
   diffuse: [0.5, 0.5, 0.5],
   specular: [1.0, 1.0, 1.0]
-})
+}), new PointLight({ x: 0, y: 3, z: -3 }, {
+  ambient: [0.6, 0.6, 0.6],
+  diffuse: [0.5, 0.5, 0.5],
+  specular: [1.0, 1.0, 1.0]
+})]
 //  Luz focal
 scene._spotLight = new SpotLight({ x: 0.0, y: 5.0, z: 0.0 }, {
   ambient: [0.2, 0.2, 0.2],
   diffuse: [0.5, 0.5, 0.5],
   specular: [1.0, 1.0, 1.0] }, { x: 0.0, y: -1.0, z: 0.0 }, { innerCutOff: 12.5 * Math.PI / 180, outerCutOff: 17.5 * Math.PI / 180 })
+
 //  Obtener renderer
 const renderer = new WebGLRend(canvas)
 
@@ -148,16 +141,14 @@ function main () {
   //  Refrescar pantalla
   window.requestAnimationFrame(main)
   //  Dibujar
-  renderer.render(scene, cameras[camarasGui.camara])
+  renderer.render(scene, cameras[context.gui.camara.camara])
 }
 window.requestAnimationFrame(main)
 
 //  Generar DatGui
 const args = {
   meshes: meshes,
-  camarasGui: camarasGui,
-  cameras: cameras,
-  figures: figures,
-  observerCamera: observerCamera
+  datGui: context.gui,
+  cameras: cameras
 }
 Utils.generateDatGui(args)

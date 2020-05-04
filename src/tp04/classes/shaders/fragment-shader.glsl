@@ -1,5 +1,7 @@
 precision mediump float;
 
+#define NR_POINT_LIGHTS 2
+
 // Material Struct
 struct Material {
   vec3 ambient;
@@ -10,6 +12,8 @@ struct Material {
 };
 //  PointLight Struct
 struct PointLight {
+  bool active;
+
   vec3 position;
 
   vec3 ambient;
@@ -22,6 +26,8 @@ struct PointLight {
 };
 //  DirectionLight Struct
 struct DirectionLight {
+  bool active;
+
   vec3 direction;
 
   vec3 ambient;
@@ -30,6 +36,8 @@ struct DirectionLight {
 };
 //  SpotLight Struct
 struct SpotLight {
+  bool active;
+
   vec3 position;
   vec3 spotDirection;
   //  Cosenos de los angulos, no
@@ -53,7 +61,7 @@ uniform vec3 uViewPos;
 
 uniform Material uMaterial;
 uniform DirectionLight uDirLight;
-uniform PointLight uPointLight;
+uniform PointLight uPointLight[NR_POINT_LIGHTS];
 uniform SpotLight uSpotLight;
 
 //  Funciones para calculo de luces
@@ -67,13 +75,22 @@ void main() {
   vec3 viewDir = normalize(uViewPos - vFragPos);
 
   //  Luz direccional
-  result += getDirLight(normal, viewDir);
+  if (uDirLight.active) {
+    result += getDirLight(normal, viewDir);
+  }
 
   //  Luces posicionales
-  result += getPointLight(uPointLight, normal, viewDir);
+  for (int i = 0; i < NR_POINT_LIGHTS; i++) {
+    //  Solo si luz activa
+    if (uPointLight[i].active) {
+      result += getPointLight(uPointLight[i], normal, viewDir);
+    }
+  }
 
   // Luces de foco
-  result += getSpotLight(uSpotLight, normal, viewDir);
+  if (uSpotLight.active) {
+    result += getSpotLight(uSpotLight, normal, viewDir);
+  }
 
   gl_FragColor = vec4(result, 1.0);
 }

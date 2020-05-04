@@ -23,8 +23,10 @@ class WebglRenderer {
     this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT)
     this._gl.viewport(0, 0, this._gl.drawingBufferWidth, this._gl.drawingBufferHeight)
 
-    //  Light Box
-    this._renderLightBox(camera, scene)
+    //  Light Boxes solo si existen
+    if (typeof scene._pointLight === 'object') {
+      this._renderLightBox(camera, scene)
+    }
 
     this._gl.useProgram(this._cache.programInfo.program)
 
@@ -53,19 +55,12 @@ class WebglRenderer {
         'uMaterial.diffuse': mesh._material.diffuse,
         'uMaterial.specular': mesh._material.specular,
         'uMaterial.shininess': mesh._material.shininess,
+        'uDirLight.active': scene._ambientLight.active,
         'uDirLight.direction': scene._ambientLight.direction,
         'uDirLight.ambient': scene._ambientLight.color.ambient,
         'uDirLight.diffuse': scene._ambientLight.color.diffuse,
         'uDirLight.specular': scene._ambientLight.color.specular,
-        'uPointLight.position': [scene._pointLight._px,
-          scene._pointLight._py,
-          scene._pointLight._pz],
-        'uPointLight.ambient': scene._pointLight.color.ambient,
-        'uPointLight.diffuse': scene._pointLight.color.diffuse,
-        'uPointLight.specular': scene._pointLight.color.specular,
-        'uPointLight.constant': scene._pointLight._constant,
-        'uPointLight.linear': scene._pointLight._linear,
-        'uPointLight.quadratic': scene._pointLight._quadratic,
+        'uSpotLight.active': scene._spotLight.active,
         'uSpotLight.position': [scene._spotLight._px,
           scene._spotLight._py,
           scene._spotLight._pz],
@@ -80,6 +75,23 @@ class WebglRenderer {
         'uSpotLight.constant': scene._spotLight._constant,
         'uSpotLight.linear': scene._spotLight._linear,
         'uSpotLight.quadratic': scene._spotLight._quadratic,
+      }
+
+      // Insertar en Uniforms las distintas pointlights
+      for (let i = 0; i < scene._pointLight.length; i++) {
+        const pointLight = scene._pointLight[i]
+
+        // Luces puntuales
+        uniforms['uPointLight[' + i + '].active'] = pointLight.active
+        uniforms['uPointLight[' + i + '].position'] = [pointLight._px,
+          pointLight._py,
+          pointLight._pz]
+        uniforms['uPointLight[' + i + '].ambient'] = pointLight.color.ambient
+        uniforms['uPointLight[' + i + '].diffuse'] = pointLight.color.diffuse
+        uniforms['uPointLight[' + i + '].specular'] = pointLight.color.specular
+        uniforms['uPointLight[' + i + '].constant'] = pointLight._constant
+        uniforms['uPointLight[' + i + '].linear'] = pointLight._linear
+        uniforms['uPointLight[' + i + '].quadratic'] = pointLight._quadratic
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i])
@@ -98,29 +110,40 @@ class WebglRenderer {
     }
     this._gl.useProgram(this._cache.programInfoLight.program)
 
-    //  Cache de bufferInfo
-    if (!this._cache.lightBox) {
-      const cube = new CubeGeometry(1)
-      const arrays = {
-        aPosition: cube._vertices,
-        indices: cube._faces
+    // Crear figura de cubo para luces puntuales
+    const cube = new CubeGeometry(1)
+
+    // Para cada una de las luces puntuales
+    for (let i = 0; i < scene._pointLight.length; i++) {
+      //  Solo si la luz esta activa
+      if (!scene._pointLight[i].active) {
+        continue
       }
-      this._cache.lightBox = twgl.createBufferInfoFromArrays(this._gl, arrays)
-    }
+      const pointLight = scene._pointLight[i]
+      //  Cache de bufferInfo
+      if (!this._cache.lightBox) {
+        const arrays = {
+          aPosition: cube._vertices,
+          indices: cube._faces
+        }
+        this._cache.lightBox = twgl.createBufferInfoFromArrays(this._gl, arrays)
+      }
 
-    const uniforms = {
-      uProjectionMatrix: camera.projectionMatrix,
-      uViewMatrix: camera.viewMatrix,
-      uModelMatrix: [1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 3, 3, 1],
-      uLightColor: scene._pointLight.color.ambient
-    }
+      const uniforms = {
+        uProjectionMatrix: camera.projectionMatrix,
+        uViewMatrix: camera.viewMatrix,
+        uModelMatrix: [ 1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 1, 0,
+          pointLight._px, pointLight._py, pointLight._pz, 1
+        ],
+        uLightColor: pointLight.color.ambient
+      }
 
-    twgl.setBuffersAndAttributes(this._gl, this._cache.programInfoLight, this._cache.lightBox)
-    twgl.setUniforms(this._cache.programInfoLight, uniforms)
-    twgl.drawBufferInfo(this._gl, this._cache.lightBox, this._gl.TRIANGLES)
+      twgl.setBuffersAndAttributes(this._gl, this._cache.programInfoLight, this._cache.lightBox)
+      twgl.setUniforms(this._cache.programInfoLight, uniforms)
+      twgl.drawBufferInfo(this._gl, this._cache.lightBox, this._gl.TRIANGLES)
+    }
   }
 }
 
