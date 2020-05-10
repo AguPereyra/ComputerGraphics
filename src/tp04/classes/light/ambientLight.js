@@ -5,7 +5,9 @@ class AmbientLight extends Light {
   //  con la direccion como [x, y, z]
   constructor (direction, color) {
     super(color)
-    this.direction = direction
+    this._dirX = direction[0]
+    this._dirY = direction[1]
+    this._dirZ = direction[2]
   }
 }
 

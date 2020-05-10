@@ -2,6 +2,7 @@ const Dat = require('dat.gui')
 const Geometry = require('../figures/geometry')
 const Mesh = require('../scene/mesh')
 const RegPol = require('../figures/regularConvexPolygonGeometry')
+const Material = require('../scene/material')
 //  Clase que contiene funciones de utilidad
 //  para generar arreglos de un color,
 //  inicializar los meshes con poligonos,
@@ -62,12 +63,8 @@ class Utils {
       geometry._faces = [0, 1]
       geometry._normals = [vertices[2 * i + 3] / 10, vertices[2 * i + 4] / 10, vertices[2 * i + 5] / 10,
         vertices[2 * i + 3] / 10, vertices[2 * i + 4] / 10, vertices[2 * i + 5] / 10]
-      const material = {
-        diffuse: [colors[i], colors[i + 1], colors[i + 2]],
-        specular: [1.0, 1.0, 1.0],
-        shininess: 1.0
-      }
-      meshes.push(new Mesh(geometry, material))
+
+      meshes.push(new Mesh(geometry, colors.slice(i, i + 3)))
       meshes[i / 3]._drawAsTriangle = false // Dibujar meshes con LINES y no con TRIANGLES
     }
     return meshes
@@ -100,17 +97,11 @@ class Utils {
       posXMin++ //  Nos movemos al proximo punto
       posXMax++ //  Vamos al anterior
     }
-    //  Generar colores
-    const colors = {
-      diffuse: color,
-      specular: [1.0, 1.0, 1.0],
-      shininess: 32
-    }
     //  Generar mesh
     const geometry = new Geometry()
     geometry._faces = indexes
     geometry._vertices = vertices
-    const mesh = new Mesh(geometry, colors)
+    const mesh = new Mesh(geometry, color)
     //  Indicar que se dibuje con lineas
     mesh._drawAsTriangle = false
     return mesh
@@ -124,6 +115,7 @@ class Utils {
     const cameras = args.cameras
     const figures = args.datGui.figures
     const observerCamera = args.datGui.observerCamera
+    const scene = args.scene
     //  DatGUI
     const guiFigures = new Dat.GUI()
     const guiCamera = new Dat.GUI()
@@ -141,6 +133,11 @@ class Utils {
       figuresGui[i].add(meshes[i], '_sx').min(0).step(0.1)
       figuresGui[i].add(meshes[i], '_sy').min(0).step(0.1)
       figuresGui[i].add(meshes[i], '_sz').min(0).step(0.1)
+      const colorsFold = figuresGui[i].addFolder('Colors')
+      colorsFold.addColor(meshes[i]._material.color, 'ambientRGB')
+      colorsFold.addColor(meshes[i]._material.color, 'diffuseRGB')
+      colorsFold.addColor(meshes[i]._material.color, 'specularRGB')
+      colorsFold.add(meshes[i]._material, 'shininess')
     }
     //  Cámaras
     const camaraFolder = guiCamera.addFolder('Camera')
@@ -181,6 +178,51 @@ class Utils {
     rotationFolder.add(cameras[2], '_yaw').min(0).max(2 * Math.PI).step(0.01)
     rotationFolder.add(cameras[2], '_pitch').min(0).max(2 * Math.PI).step(0.01)
     rotationFolder.add(cameras[2], '_roll').min(0).max(2 * Math.PI).step(0.01)
+
+    //  Luces
+    const guiLights = new Dat.GUI()
+    const lightFolder = guiLights.addFolder('Lights')
+    //  Ambiente
+    const directionalFolder = lightFolder.addFolder('Directional')
+    directionalFolder.add(scene._ambientLight, 'active')
+    directionalFolder.add(scene._ambientLight, '_dirX').min(-1).max(1).step(0.01)
+    directionalFolder.add(scene._ambientLight, '_dirY').min(-1).max(1).step(0.01)
+    directionalFolder.add(scene._ambientLight, '_dirZ').min(-1).max(1).step(0.01)
+    directionalFolder.addColor(scene._ambientLight.color, 'ambientRGB')
+    directionalFolder.addColor(scene._ambientLight.color, 'diffuseRGB')
+    directionalFolder.addColor(scene._ambientLight.color, 'specularRGB')
+    //  Puntuales
+    const pointFolders = []
+    for (let i = 0; i < scene._pointLight.length; i++) {
+      pointFolders.push(lightFolder.addFolder('PointLight ' + i))
+      pointFolders[i].add(scene._pointLight[i], 'active')
+      pointFolders[i].add(scene._pointLight[i], '_px').min(-20).max(20)
+      pointFolders[i].add(scene._pointLight[i], '_py').min(-20).max(20)
+      pointFolders[i].add(scene._pointLight[i], '_pz').min(-20).max(20)
+      pointFolders[i].add(scene._pointLight[i], '_constant').min(1)
+      pointFolders[i].add(scene._pointLight[i], '_linear')
+      pointFolders[i].add(scene._pointLight[i], '_quadratic')
+      pointFolders[i].addColor(scene._pointLight[i].color, 'ambientRGB')
+      pointFolders[i].addColor(scene._pointLight[i].color, 'diffuseRGB')
+      pointFolders[i].addColor(scene._pointLight[i].color, 'specularRGB')
+    }
+    //  Focal
+    const spotFolder = lightFolder.addFolder('SpotLight ')
+    spotFolder.add(scene._spotLight, 'active')
+    spotFolder.add(scene._spotLight, '_px').min(-20).max(20)
+    spotFolder.add(scene._spotLight, '_py').min(-20).max(20)
+    spotFolder.add(scene._spotLight, '_pz').min(-20).max(20)
+    spotFolder.add(scene._spotLight, '_sdX').min(-20).max(20).step(0.01)
+    spotFolder.add(scene._spotLight, '_sdY').min(-20).max(20).step(0.01)
+    spotFolder.add(scene._spotLight, '_sdZ').min(-20).max(20).step(0.01)
+    spotFolder.add(scene._spotLight, 'innerCutOff').min(-Math.PI / 2).max(Math.PI / 2).step(0.01)
+    spotFolder.add(scene._spotLight, 'outerCutOff').min(-Math.PI / 2).max(Math.PI / 2).step(0.01)
+    spotFolder.add(scene._spotLight, '_constant').min(1)
+    spotFolder.add(scene._spotLight, '_linear')
+    spotFolder.add(scene._spotLight, '_quadratic')
+    spotFolder.addColor(scene._spotLight.color, 'ambientRGB')
+    spotFolder.addColor(scene._spotLight.color, 'diffuseRGB')
+    spotFolder.addColor(scene._spotLight.color, 'specularRGB')
   }
 }
 

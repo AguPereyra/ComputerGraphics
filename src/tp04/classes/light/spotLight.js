@@ -11,6 +11,24 @@ class SpotLight extends PointLight {
     this._innerCutOff = Math.cos(angles.innerCutOff)
     this._outerCutOff = Math.cos(angles.outerCutOff)
   }
+
+  // Metodos para poder editar los inner y outer
+  // cutoff como angulos
+  set innerCutOff (angle) {
+    this._innerCutOff = Math.cos(angle)
+  }
+
+  set outerCutOff (angle) {
+    this._outerCutOff = Math.cos(angle)
+  }
+
+  get innerCutOff () {
+    return Math.acos(this._innerCutOff)
+  }
+
+  get outerCutOff () {
+    return Math.acos(this._outerCutOff)
+  }
 }
 
 module.exports = SpotLight

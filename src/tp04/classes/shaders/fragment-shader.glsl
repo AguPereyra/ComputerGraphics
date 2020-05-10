@@ -1,4 +1,4 @@
-precision mediump float;
+precision highp float;
 
 #define NR_POINT_LIGHTS 2
 
@@ -64,6 +64,12 @@ uniform DirectionLight uDirLight;
 uniform PointLight uPointLight[NR_POINT_LIGHTS];
 uniform SpotLight uSpotLight;
 
+//  Usamos la view Matrix para que
+//  al orbitar la camara con yaw,
+//  pitch y roll se vean los efectos
+//  en la viewPos
+uniform mat4 uViewMatrix;
+
 //  Funciones para calculo de luces
 vec3 getDirLight(vec3 normal, vec3 viewDir);
 vec3 getPointLight(PointLight light, vec3 normal, vec3 viewDir);
@@ -72,7 +78,9 @@ vec3 getSpotLight(SpotLight light, vec3 normal, vec3 viewDir);
 void main() {
   vec3 result = vec3(0.0);
   vec3 normal = normalize(vNormal);
-  vec3 viewDir = normalize(uViewPos - vFragPos);
+
+  vec3 finalViewPos = mat3(uViewMatrix) * uViewPos;
+  vec3 viewDir = normalize(finalViewPos - vFragPos);
 
   //  Luz direccional
   if (uDirLight.active) {
@@ -93,6 +101,7 @@ void main() {
   }
 
   gl_FragColor = vec4(result, 1.0);
+  //gl_FragColor = vec4(normal, 1.0);
 }
 
 vec3 getDirLight(vec3 normal, vec3 viewDir) {

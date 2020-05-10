@@ -71,7 +71,7 @@ class CylinderGeometry extends Geometry {
       this._faces.push(i + 1, i, 0)
     }
     //  Tope
-    for (; i <= this.edges * 2 - 2; i++) {
+    for (i = sectorCount; i <= sectorCount * 2 - 2; i++) {
       this._faces.push(sectorCount, i, i + 1)
     }
   }

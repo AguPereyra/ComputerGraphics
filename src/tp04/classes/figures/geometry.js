@@ -28,11 +28,11 @@ class Geometry {
       const ic = this._faces[i + 2] * 3
 
       const e1 = glMatrix.vec3.subtract([],
-        [this._vertices[ia], this._vertices[ia + 1], this._vertices[ia + 2]],
-        [this._vertices[ib], this._vertices[ib + 1], this._vertices[ib + 2]])
+        this._vertices.slice(ia, ia + 3),
+        this._vertices.slice(ib, ib + 3))
       const e2 = glMatrix.vec3.subtract([],
-        [this._vertices[ic], this._vertices[ic + 1], this._vertices[ic + 2]],
-        [this._vertices[ib], this._vertices[ib + 1], this._vertices[ib + 2]])
+        this._vertices.slice(ic, ic + 3),
+        this._vertices.slice(ib, ib + 3))
       const crossProd = glMatrix.vec3.cross([], e1, e2)
 
       this._normals[ia] += crossProd[0]
@@ -45,20 +45,8 @@ class Geometry {
       this._normals[ic + 1] += crossProd[1]
       this._normals[ic + 2] += crossProd[2]
     }
-    //  Normalizar normales
-    let normal = []
-    for (let i = 0; i < this._normals.length / 3; i += 3) {
-      normal = glMatrix.vec3.normalize([], [
-        this.normals[i], // x
-        this._normals[i + 1], // y
-        this._normals[i + 2] // z
-      ])
-      this._normals[i] = normal[0]
-      this._normals[i + 1] = normal[1]
-      this._normals[i + 2] = normal[2]
-    }
 
-    return this.normals
+    return this._normals
   }
 }
 
