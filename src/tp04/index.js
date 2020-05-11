@@ -137,7 +137,7 @@ cameras[1] = new OrtographicCamera(context.default.orthoGui.left, context.defaul
 //  los parametros de posicion de ambas camaras con una sola interfaz
 // -------------------
 context.gui.observerCamera = new ObserverCamera({ orbitalCamera: cameras[0],
-  orthoCamera: cameras[1]})
+  orthoCamera: cameras[1] })
 // -------------------
 //  Escenas: dos, una para usar luces,
 //  y otra sin luces (para grid y ejes).
