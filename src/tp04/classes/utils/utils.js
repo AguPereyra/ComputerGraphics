@@ -2,7 +2,6 @@ const Dat = require('dat.gui')
 const Geometry = require('../figures/geometry')
 const Mesh = require('../scene/mesh')
 const RegPol = require('../figures/regularConvexPolygonGeometry')
-const Material = require('../scene/material')
 //  Clase que contiene funciones de utilidad
 //  para generar arreglos de un color,
 //  inicializar los meshes con poligonos,
@@ -118,7 +117,7 @@ class Utils {
     const scene = args.scene
     //  DatGUI
     const guiFigures = new Dat.GUI()
-    const guiCamera = new Dat.GUI()
+    const guiOther = new Dat.GUI()
     //  Figuras
     const figuresFolder = guiFigures.addFolder('Figures')
     let figuresGui = []
@@ -133,15 +132,15 @@ class Utils {
       figuresGui[i].add(meshes[i], '_sx').min(0).step(0.1)
       figuresGui[i].add(meshes[i], '_sy').min(0).step(0.1)
       figuresGui[i].add(meshes[i], '_sz').min(0).step(0.1)
-      const colorsFold = figuresGui[i].addFolder('Colors')
+      const colorsFold = figuresGui[i].addFolder('Material')
       colorsFold.addColor(meshes[i]._material.color, 'ambientRGB')
       colorsFold.addColor(meshes[i]._material.color, 'diffuseRGB')
       colorsFold.addColor(meshes[i]._material.color, 'specularRGB')
       colorsFold.add(meshes[i]._material, 'shininess')
     }
     //  Cámaras
-    const camaraFolder = guiCamera.addFolder('Camera')
-    camaraFolder.add(camarasGui, 'camara', { Perspective: 0, Orthographic: 1, Orbital: 2 })
+    const camaraFolder = guiOther.addFolder('Camera')
+    camaraFolder.add(camarasGui, 'camara', { Orbital: 0, Orthographic: 1 })
     //  Posición de la cámara
     const cameraPosFolder = camaraFolder.addFolder('Position')
     //  Posición del ojo
@@ -174,14 +173,13 @@ class Utils {
     perspectiveFolder.add(cameras[0], '_far').min(0).max(1000).step(0.01)
 
     //  Cámara de rotación
-    const rotationFolder = camaraFolder.addFolder('Rotation Camera')
-    rotationFolder.add(cameras[2], '_yaw').min(0).max(2 * Math.PI).step(0.01)
-    rotationFolder.add(cameras[2], '_pitch').min(0).max(2 * Math.PI).step(0.01)
-    rotationFolder.add(cameras[2], '_roll').min(0).max(2 * Math.PI).step(0.01)
+    const rotationFolder = camaraFolder.addFolder('Orbital Options')
+    rotationFolder.add(cameras[0], '_yaw').min(0).max(2 * Math.PI).step(0.01)
+    rotationFolder.add(cameras[0], '_pitch').min(0).max(2 * Math.PI).step(0.01)
+    rotationFolder.add(cameras[0], '_roll').min(0).max(2 * Math.PI).step(0.01)
 
     //  Luces
-    const guiLights = new Dat.GUI()
-    const lightFolder = guiLights.addFolder('Lights')
+    const lightFolder = guiOther.addFolder('Lights')
     //  Ambiente
     const directionalFolder = lightFolder.addFolder('Directional')
     directionalFolder.add(scene._ambientLight, 'active')
@@ -215,8 +213,8 @@ class Utils {
     spotFolder.add(scene._spotLight, '_sdX').min(-20).max(20).step(0.01)
     spotFolder.add(scene._spotLight, '_sdY').min(-20).max(20).step(0.01)
     spotFolder.add(scene._spotLight, '_sdZ').min(-20).max(20).step(0.01)
-    spotFolder.add(scene._spotLight, 'innerCutOff').min(-Math.PI / 2).max(Math.PI / 2).step(0.01)
-    spotFolder.add(scene._spotLight, 'outerCutOff').min(-Math.PI / 2).max(Math.PI / 2).step(0.01)
+    spotFolder.add(scene._spotLight, 'innerCutOff').min(0).max(179).step(0.01)
+    spotFolder.add(scene._spotLight, 'outerCutOff').min(0).max(180).step(0.01)
     spotFolder.add(scene._spotLight, '_constant').min(1)
     spotFolder.add(scene._spotLight, '_linear')
     spotFolder.add(scene._spotLight, '_quadratic')

@@ -38,6 +38,9 @@ class CubeGeometry extends Geometry {
       this._faces.push(k1 + i, k1 + 3, k1 + 1 + i)
       this._faces.push(k2 + i, k2 + 1 + i, k2 + 3)
     }
+
+    //  Normales
+    this.normals = this._vertices
   }
 }
 

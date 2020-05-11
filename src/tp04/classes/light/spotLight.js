@@ -10,24 +10,30 @@ class SpotLight extends PointLight {
     //  en los shaders (ahorrar el arco-cos)
     this._innerCutOff = Math.cos(angles.innerCutOff)
     this._outerCutOff = Math.cos(angles.outerCutOff)
+    //  Variables que almacenan el angulo en grados
+    //  solo para que sea mas facil leer desde interfaz
+    this._radInnCO = angles.innerCutOff
+    this._radOutCO = angles.outerCutOff
   }
 
   // Metodos para poder editar los inner y outer
-  // cutoff como angulos
+  // cutoff como angulos centigrados
   set innerCutOff (angle) {
-    this._innerCutOff = Math.cos(angle)
+    this._radInnCO = angle * Math.PI / 180
+    this._innerCutOff = Math.cos(this._radInnCO)
   }
 
   set outerCutOff (angle) {
-    this._outerCutOff = Math.cos(angle)
+    this._radOutCO = angle * Math.PI / 180
+    this._outerCutOff = Math.cos(this._radOutCO)
   }
 
   get innerCutOff () {
-    return Math.acos(this._innerCutOff)
+    return this._radInnCO * 180 / Math.PI
   }
 
   get outerCutOff () {
-    return Math.acos(this._outerCutOff)
+    return this._radOutCO * 180 / Math.PI
   }
 }
 

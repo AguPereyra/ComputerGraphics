@@ -45,6 +45,9 @@ class SphereGeometry extends Geometry {
         }
       }
     }
+
+    //  Normales
+    this.normals = this._vertices
   }
 }
 

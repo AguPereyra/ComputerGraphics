@@ -48,6 +48,10 @@ class Geometry {
 
     return this._normals
   }
+
+  set normals (norm) {
+    this._normals = norm
+  }
 }
 
 module.exports = Geometry

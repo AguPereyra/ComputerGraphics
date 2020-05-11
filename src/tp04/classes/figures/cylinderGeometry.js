@@ -9,17 +9,18 @@ class CylinderGeometry extends Geometry {
     //  Para disminuir calculos hacemos una
     //  circunferencia de radio unitario y luego
     //  la trasladamos en z y le modificamos el r.
-    const sectorCount = 8 //  Cantidad de muestras para dibujar la circunferencia
+    const sectorCount = 24 //  Cantidad de muestras para dibujar la circunferencia
     //  Definimos los vertices
     const verticesUnit = this._getUnitCircle(sectorCount)
 
     //  Colocamos las circunferencias en la base
     //  y en el tope, con sus respectivos radios
+    const heights = [-height / 2, height / 2]
     for (let j = 0; j < 2; j++) {
       for (let i = 0; i < verticesUnit.length; i += 2) {
         this._vertices.push(verticesUnit[i] * radius[j]) //  x
         this._vertices.push(verticesUnit[i + 1] * radius[j]) // y
-        this._vertices.push(height * j) //  z
+        this._vertices.push(heights[j]) //  z
       }
     }
 
@@ -36,18 +37,21 @@ class CylinderGeometry extends Geometry {
     let k2 = sectorCount
     for (let i = 0; i < sectorCount - 1; i++, k1++, k2++) {
       //  Insertamos los dos triangulos para el sector
-      this._faces.push(k2, k1, k1 + 1)
-      this._faces.push(k1 + 1, k2 + 1, k2)
+      this._faces.push(k2, k1 + 1, k1)
+      this._faces.push(k1 + 1, k2, k2 + 1)
     }
     //  Indices para el sector que une los ultimos
     //  vertice con los primeros
     //  k1: ultimo de la base
     //  k2: ultimo del tope
-    this._faces.push(sectorCount * 2 - 1, sectorCount - 1, 0)
-    this._faces.push(0, sectorCount, sectorCount * 2 - 1)
+    this._faces.push(sectorCount * 2 - 1, 0, sectorCount - 1)
+    this._faces.push(0, sectorCount * 2 - 1, sectorCount)
 
     //  Definir los indices de la base y tope
     this._getIndicesTopBottom(sectorCount)
+
+    //  Normales
+    this.normals = this._vertices
   }
   //  Funcion que genera los vertices de un circulo
   //  de radio unitario, sobre el plano xy
@@ -68,11 +72,11 @@ class CylinderGeometry extends Geometry {
     //  Base
     let i
     for (i = 1; i <= sectorCount - 2; i++) {
-      this._faces.push(i + 1, i, 0)
+      this._faces.push(0, i, i + 1)
     }
     //  Tope
     for (i = sectorCount; i <= sectorCount * 2 - 2; i++) {
-      this._faces.push(sectorCount, i, i + 1)
+      this._faces.push(sectorCount, i + 1, i)
     }
   }
 }

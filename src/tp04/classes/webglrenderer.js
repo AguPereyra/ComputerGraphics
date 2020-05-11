@@ -182,7 +182,7 @@ class WebglRenderer {
           0, 1, 0, 0,
           0, 0, 1, 0,
           pointLight._px, pointLight._py, pointLight._pz, 1],
-        uColor: pointLight.color._ambient
+        uColor: pointLight.color._diffuse
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfoLight, this._cache.lightPointBox)
@@ -211,7 +211,7 @@ class WebglRenderer {
           [scene._spotLight._px, scene._spotLight._py, scene._spotLight._pz],
           [scene._spotLight._sdX, scene._spotLight._sdY, scene._spotLight._sdZ],
           [1, 0, 0]),
-        uColor: scene._spotLight.color._ambient
+        uColor: scene._spotLight.color._diffuse
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cache.programInfoLight, this._cache.lightSpotBox)
