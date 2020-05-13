@@ -9,7 +9,7 @@ const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
-const OrbitalCamera = require('./classes/camera/orbitalCamera')
+const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
 const AmbientLight = require('./classes/light/ambientLight')
 const PointLight = require('./classes/light/pointLight')
 const SpotLight = require('./classes/light/spotLight')
@@ -43,11 +43,11 @@ const context = {
       far: 1000
     },
     cubeMaterial: {
-      // Jade
-      ambient: [0.135, 0.2225, 0.1575],
-      diffuse: [0.54, 0.89, 0.63],
-      specular: [0.316228, 0.316228, 0.316228],
-      shininess: 1
+      // Obsidiana
+      ambient: [0.05375, 0.05, 0.06625],
+      diffuse: [0.18275, 0.17, 0.22525],
+      specular: [0.332741, 0.328634, 0.346435],
+      shininess: 33
     },
     cylinderMaterial: {
       // Turquesa
@@ -85,7 +85,7 @@ const context = {
       diffuse: [0.5, 0.5, 0.5],
       specular: [1.0, 1.0, 1.0]
     })],
-    spotLight: new SpotLight([0.0, 6.0, 0.0],
+    spotLight: new SpotLight([0.0, 3.0, 0.0],
       {
         ambient: [0.2, 0.2, 0.2],
         diffuse: [0.5, 0.5, 0.5],
@@ -127,7 +127,7 @@ meshes.push(new Mesh(cylinder, materials[2]))
 // -------------------
 let cameras = []
 //  Camara Perspectiva con rotacion
-cameras[0] = new OrbitalCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
+cameras[0] = new PerspectiveCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
   context.default.perspectiveGui.near, context.default.perspectiveGui.far)
 //  Ortográfica
 cameras[1] = new OrtographicCamera(context.default.orthoGui.left, context.default.orthoGui.right, context.default.orthoGui.bottom,
