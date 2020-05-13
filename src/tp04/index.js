@@ -10,6 +10,7 @@ const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
 const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
+const OrbitalCamera = require('./classes/camera/orbitalCamera')
 const AmbientLight = require('./classes/light/ambientLight')
 const PointLight = require('./classes/light/pointLight')
 const SpotLight = require('./classes/light/spotLight')
@@ -126,12 +127,15 @@ meshes.push(new Mesh(cylinder, materials[2]))
 //  Cámaras
 // -------------------
 let cameras = []
-//  Camara Perspectiva con rotacion
+//  Camara Perspectiva
 cameras[0] = new PerspectiveCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
   context.default.perspectiveGui.near, context.default.perspectiveGui.far)
 //  Ortográfica
 cameras[1] = new OrtographicCamera(context.default.orthoGui.left, context.default.orthoGui.right, context.default.orthoGui.bottom,
   context.default.orthoGui.top, context.default.orthoGui.near, context.default.orthoGui.far)
+//  Camara con rotacion
+cameras[2] = new OrbitalCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
+  context.default.perspectiveGui.near, context.default.perspectiveGui.far)
 // -------------------
 //  Observer, que sirve para poder cambiar desde el dat.GUI
 //  los parametros de posicion de ambas camaras con una sola interfaz

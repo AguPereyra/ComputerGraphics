@@ -140,7 +140,7 @@ class Utils {
     }
     //  Cámaras
     const camaraFolder = guiOther.addFolder('Camera')
-    camaraFolder.add(camarasGui, 'camara', { Perspective: 0, Orthographic: 1, Orbital: 2 })
+    camaraFolder.add(camarasGui, 'camara', { Perspective: 0, Orthographic: 1 })
     //  Posición de la cámara
     const cameraPosFolder = camaraFolder.addFolder('Position')
     //  Posición del ojo
@@ -173,10 +173,12 @@ class Utils {
     perspectiveFolder.add(cameras[0], '_far').min(0).max(1000).step(0.01)
 
     //  Cámara de rotación
+    /*
     const rotationFolder = camaraFolder.addFolder('Orbital Options')
-    rotationFolder.add(cameras[2], '_yaw').min(0).max(2 * Math.PI).step(0.01)
-    rotationFolder.add(cameras[2], '_pitch').min(0).max(2 * Math.PI).step(0.01)
-    rotationFolder.add(cameras[2], '_roll').min(0).max(2 * Math.PI).step(0.01)
+    rotationFolder.add(cameras[0], '_yaw').min(0).max(2 * Math.PI).step(0.01)
+    rotationFolder.add(cameras[0], '_pitch').min(0).max(2 * Math.PI).step(0.01)
+    rotationFolder.add(cameras[0], '_roll').min(0).max(2 * Math.PI).step(0.01)
+    */
 
     //  Luces
     const lightFolder = guiOther.addFolder('Lights')

@@ -68,8 +68,8 @@ uniform SpotLight uSpotLight;
 //  al orbitar la camara con yaw,
 //  pitch y roll se vean los efectos
 //  en la viewPos
-uniform mat4 uViewMatrix;
-uniform mat4 uModelMatrix;
+//uniform mat4 uViewMatrix;
+//uniform mat4 uModelMatrix;
 
 //  Funciones para calculo de luces
 vec3 getDirLight(vec3 normal, vec3 viewDir);
@@ -80,9 +80,9 @@ void main() {
   vec3 result = vec3(0.0);
   vec3 normal = normalize(vNormal);
 
-  vec3 finalViewPos = vec3(uViewMatrix * vec4(uViewPos, 0.0));
-  vec3 viewDir = normalize(finalViewPos - vFragPos);
-  //vec3 viewDir = normalize(uViewPos - vFragPos);
+  //vec3 finalViewPos = vec3(uViewMatrix * vec4(uViewPos, 0.0));
+  //vec3 viewDir = normalize(finalViewPos - vFragPos);
+  vec3 viewDir = normalize(uViewPos - vFragPos);
 
   //  Luz direccional
   if (uDirLight.active) {

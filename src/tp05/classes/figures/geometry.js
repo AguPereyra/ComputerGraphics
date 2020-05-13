@@ -4,6 +4,7 @@ class Geometry {
   constructor () {
     this._vertices = []
     this._faces = []
+    this._st = []
   }
 
   // Funcion que calcula las normales si no se ha hecho
