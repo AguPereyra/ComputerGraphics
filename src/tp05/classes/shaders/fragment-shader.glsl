@@ -4,8 +4,10 @@ precision highp float;
 
 // Material Struct
 struct Material {
-  vec3 ambient;
-  vec3 diffuse;
+  // vec3 ambient;
+  // vec3 diffuse;
+  sampler2D ambient;
+  sampler2D diffuse;
   vec3 specular;
 
   float shininess;
@@ -56,6 +58,7 @@ struct SpotLight {
 
 varying vec3 vNormal;
 varying vec3 vFragPos;
+varying vec2 vTextCoords;
 
 uniform vec3 uViewPos;
 
@@ -63,13 +66,6 @@ uniform Material uMaterial;
 uniform DirectionLight uDirLight;
 uniform PointLight uPointLight[NR_POINT_LIGHTS];
 uniform SpotLight uSpotLight;
-
-//  Usamos la view Matrix para que
-//  al orbitar la camara con yaw,
-//  pitch y roll se vean los efectos
-//  en la viewPos
-//uniform mat4 uViewMatrix;
-//uniform mat4 uModelMatrix;
 
 //  Funciones para calculo de luces
 vec3 getDirLight(vec3 normal, vec3 viewDir);
@@ -109,10 +105,10 @@ void main() {
 vec3 getDirLight(vec3 normal, vec3 viewDir) {
   vec3 lightDir = normalize(-uDirLight.direction);
   //  Factor para luz de ambiente
-  vec3 ambientColor = uDirLight.ambient * uMaterial.ambient;
+  vec3 ambientColor = uDirLight.ambient * vec3(texture2D(uMaterial.ambient, vTextCoords));
   //  Luz difusa
   float diff = max(dot(normal, lightDir), 0.0);
-  vec3 diffuseColor = uDirLight.diffuse * uMaterial.diffuse * diff;
+  vec3 diffuseColor = uDirLight.diffuse * diff * vec3(texture2D(uMaterial.diffuse, vTextCoords));
   //  Luz especular
   vec3 reflectDir = reflect(-lightDir, normal);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
@@ -124,10 +120,10 @@ vec3 getDirLight(vec3 normal, vec3 viewDir) {
 vec3 getPointLight(PointLight light, vec3 normal, vec3 viewDir) {
   vec3 lightDir = normalize(light.position - vFragPos);
   //  Factor para luz de ambiente
-  vec3 ambientColor = light.ambient * uMaterial.ambient;
+  vec3 ambientColor = light.ambient * vec3(texture2D(uMaterial.ambient, vTextCoords));
   //  Luz difusa
   float diff = max(dot(normal, lightDir), 0.0);
-  vec3 diffuseColor = light.diffuse * uMaterial.diffuse * diff;
+  vec3 diffuseColor = light.diffuse * diff * vec3(texture2D(uMaterial.diffuse, vTextCoords));
   //  Luz especular
   vec3 reflectDir = reflect(-lightDir, normal);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
@@ -154,10 +150,10 @@ vec3 getSpotLight(SpotLight light, vec3 normal, vec3 viewDir) {
   float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
   //  Factor para luz de ambiente
-  vec3 ambientColor = light.ambient * uMaterial.ambient;
+  vec3 ambientColor = light.ambient * vec3(texture2D(uMaterial.ambient, vTextCoords));
   //  Luz difusa
   float diff = max(dot(normal, lightDir), 0.0);
-  vec3 diffuseColor = light.diffuse * uMaterial.diffuse * diff;
+  vec3 diffuseColor = light.diffuse * diff * vec3(texture2D(uMaterial.diffuse, vTextCoords));
   //  Luz especular
   vec3 reflectDir = reflect(-lightDir, normal);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);

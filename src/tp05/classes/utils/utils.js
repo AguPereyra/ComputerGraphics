@@ -107,7 +107,7 @@ class Utils {
   }
 
   //  Función que genera el Dat Gui con los parámetros necesarios
-  //  para el TP3
+  //  para el TP5
   static generateDatGui (args) {
     const meshes = args.meshes
     const camarasGui = args.datGui.camara
@@ -133,8 +133,6 @@ class Utils {
       figuresGui[i].add(meshes[i], '_sy').min(0).step(0.1)
       figuresGui[i].add(meshes[i], '_sz').min(0).step(0.1)
       const colorsFold = figuresGui[i].addFolder('Material')
-      colorsFold.addColor(meshes[i]._material.color, 'ambientRGB')
-      colorsFold.addColor(meshes[i]._material.color, 'diffuseRGB')
       colorsFold.addColor(meshes[i]._material.color, 'specularRGB')
       colorsFold.add(meshes[i]._material, 'shininess')
     }

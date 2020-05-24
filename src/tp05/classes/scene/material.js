@@ -8,7 +8,7 @@ class Material {
     this.color._specular = color.specular
     this.shininess = color.shininess
     //  Url a textura
-    this.map = ''
+    this.map = color.map
   }
 }
 

@@ -45,9 +45,18 @@ class WebglRenderer {
         const arrays = {
           aPosition: mesh._geometry._vertices,
           aNormal: mesh._geometry.normals,
+          aTextCoords: mesh._geometry._st,
           indices: mesh._geometry._faces
         }
-        this._cache.figures[i] = twgl.createBufferInfoFromArrays(this._gl, arrays)
+        this._cache.figures[i] = {}
+        this._cache.figures[i].bufferInfo = twgl.createBufferInfoFromArrays(this._gl, arrays)
+
+        //  Cacheamos la textura
+        this._cache.figures[i].texture = twgl.createTextures(this._gl, {
+          ambient: {
+            src: require('./textures/firefox-256x256.png')
+          }
+        })
       }
 
       const uniforms = {
@@ -56,8 +65,8 @@ class WebglRenderer {
         uModelMatrix: mesh.modelMatrix,
         uNormalMatrix: mesh.normalMatrix,
         uViewPos: [camera._eyeX, camera._eyeY, camera._eyeZ],
-        'uMaterial.ambient': mesh._material.color._ambient,
-        'uMaterial.diffuse': mesh._material.color._diffuse,
+        'uMaterial.ambient': this._cache.figures[i].texture.ambient,
+        'uMaterial.diffuse': this._cache.figures[i].texture.ambient,
         'uMaterial.specular': mesh._material.color._specular,
         'uMaterial.shininess': mesh._material.shininess,
         'uDirLight.active': scene._ambientLight.active,
@@ -101,9 +110,9 @@ class WebglRenderer {
         uniforms['uPointLight[' + i + '].quadratic'] = pointLight._quadratic
       }
 
-      twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i])
+      twgl.setBuffersAndAttributes(this._gl, this._cache.programInfo, this._cache.figures[i].bufferInfo)
       twgl.setUniforms(this._cache.programInfo, uniforms)
-      twgl.drawBufferInfo(this._gl, this._cache.figures[i],
+      twgl.drawBufferInfo(this._gl, this._cache.figures[i].bufferInfo,
         (mesh._drawAsTriangle) ? this._gl.TRIANGLES : this._gl.LINES)
     }
   }

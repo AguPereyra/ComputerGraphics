@@ -8,3 +8,7 @@ dejarla que borrarla.
 Trabajo de luces. La cámara de perspectiva permite rotaciones con roll, yaw y pitch, pero la cámara ortográfica no.
 
 Las luces adquieren el color que esté indicado por la componente de ambiente.
+
+## TP5
+1. El sampler2d deberia ir para material.diffuse y material.specular? En ese caso, usamos el mismo?
+2. Usar distintas texturas para ambient y para diffuse. (modificar renderer)
