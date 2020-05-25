@@ -4,6 +4,9 @@ class Mesh {
   constructor (geometry, material) {
     //  ID que debe ser asignada externamente
     this.id = 0
+    //  Variable que almacenara un color en
+    //  funcion del ID
+    this._pickingColor = null
     this._geometry = geometry
     this._material = material
     this._normalMatrix = null
@@ -39,6 +42,29 @@ class Mesh {
   get normalMatrix () {
     return glMatrix.mat4.transpose([],
       glMatrix.mat4.invert([], this.modelMatrix))
+  }
+
+  //  Function que retorna el color en funcion del ID
+  //  ATENCION: Se espera que el ID no sea un entero de
+  //  hasta 24 bits
+  get pickingColor () {
+    if (this.id > 2 ** 24) {
+      const error = {
+        msg: 'ID bound exceded 2**24'
+      }
+      throw error
+    }
+    if (!this._pickingColor) {
+      const r = (this.id & 0x0000FF) >> 0
+      const g = (this.id & 0X00FF00) >> 8
+      const b = (this.id & 0xFF0000) >> 16
+      this._pickingColor = [
+        r / 255,
+        g / 255,
+        b / 255
+      ]
+    }
+    return this._pickingColor
   }
 }
 

@@ -117,7 +117,10 @@ class WebglRenderer {
   }
 
   //  Funcion para renderizar sin luces
-  renderNoLights (scene, camera) {
+  //  El parametro pickingColor permite saber
+  //  si se debe renderizar con el material o con
+  //  un color generado para ser unico
+  renderNoLights (scene, camera, pickingColor = false) {
     const vs = require('./shaders/simple-vs.glsl')
     const fs = require('./shaders/simple-fs.glsl')
     // Cache de programa
@@ -145,7 +148,7 @@ class WebglRenderer {
         uProjectionMatrix: camera.projectionMatrix,
         uViewMatrix: camera.viewMatrix,
         uModelMatrix: mesh.modelMatrix,
-        uColor: mesh._material
+        uColor: (pickingColor) ? mesh.pickingColor : mesh._material
       }
 
       twgl.setBuffersAndAttributes(this._gl, this._cacheNoLights.programInfo, this._cacheNoLights.figures[i])
