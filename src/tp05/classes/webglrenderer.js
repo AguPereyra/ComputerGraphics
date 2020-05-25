@@ -39,7 +39,6 @@ class WebglRenderer {
     let i = 0
     for (i; i < scene._meshes.length; i++) {
       let mesh = scene._meshes[i]
-
       //  Cache de bufferInfo
       if (!this._cache.figures[i]) {
         const arrays = {

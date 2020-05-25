@@ -2,6 +2,8 @@ const glMatrix = require('gl-matrix')
 
 class Mesh {
   constructor (geometry, material) {
+    //  ID que debe ser asignada externamente
+    this.id = 0
     this._geometry = geometry
     this._material = material
     this._normalMatrix = null

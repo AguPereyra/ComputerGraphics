@@ -4,7 +4,6 @@ const WebGLRend = require('./classes/webglrenderer')
 const Scene = require('./classes/scene/scene')
 const OrtographicCamera = require('./classes/camera/ortographicCamera')
 const Utils = require('./classes/utils/utils')
-const Mesh = require('./classes/scene/mesh')
 const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
@@ -15,6 +14,7 @@ const AmbientLight = require('./classes/light/ambientLight')
 const PointLight = require('./classes/light/pointLight')
 const SpotLight = require('./classes/light/spotLight')
 const Material = require('./classes/scene/material')
+const MeshFactory = require('./classes/utils/meshFactory')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -28,6 +28,7 @@ const context = {
     },
     figures: ['Cube', 'Sphere', 'Cylinder', 'Cone']
   },
+  meshFactory: new MeshFactory(),
   default: {
     orthoGui: {
       left: -10,
@@ -132,7 +133,7 @@ materials.push(new Material(context.default.cubeMaterial))
 // -------------------
 //  Meter en mallas las figuras
 // -------------------
-meshes.push(new Mesh(cube, materials[0]))
+meshes.push(context.meshFactory.getMesh(cube, materials[0]))
 //meshes.push(new Mesh(sphere, materials[1]))
 //meshes.push(new Mesh(cylinder, materials[2]))
 // -------------------
