@@ -54,7 +54,7 @@ class WebglRenderer {
         //  Cacheamos la textura
         this._cache.figures[i].texture = twgl.createTextures(this._gl, {
           ambient: {
-            src: require('./textures/firefox-256x256.png')
+            src: require('./textures' + mesh._material.map)
           }
         })
       }
@@ -119,8 +119,8 @@ class WebglRenderer {
 
   //  Funcion para renderizar sin luces
   renderNoLights (scene, camera) {
-    const vs = require('./shaders/light-vs.glsl')
-    const fs = require('./shaders/light-fs.glsl')
+    const vs = require('./shaders/simple-vs.glsl')
+    const fs = require('./shaders/simple-fs.glsl')
     // Cache de programa
     if (!this._cacheNoLights.programInfo) {
       this._cacheNoLights.programInfo = twgl.createProgramInfo(this._gl, [vs, fs])
@@ -157,8 +157,8 @@ class WebglRenderer {
   }
 
   _renderlightPointBox (camera, scene) {
-    const vs = require('./shaders/light-vs.glsl')
-    const fs = require('./shaders/light-fs.glsl')
+    const vs = require('./shaders/simple-vs.glsl')
+    const fs = require('./shaders/simple-fs.glsl')
     // Cache de programa
     if (!this._cache.programInfoLight) {
       this._cache.programInfoLight = twgl.createProgramInfo(this._gl, [vs, fs])
