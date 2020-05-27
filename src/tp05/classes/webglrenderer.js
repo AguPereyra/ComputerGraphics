@@ -2,7 +2,6 @@ const twgl = require('twgl.js')
 const CubeGeometry = require('./figures/cubeGeometry')
 const CylinderGeometry = require('./figures/cylinderGeometry')
 const glMatrix = require('gl-matrix')
-const Mesh = require('./scene/mesh')
 
 class WebglRenderer {
   constructor (canvas) {
@@ -22,7 +21,7 @@ class WebglRenderer {
     }
 
     twgl.resizeCanvasToDisplaySize(this._gl.canvas)
-    this._gl.clearColor(0.2, 0.2, 0.2, 1)
+    this._gl.clearColor(scene.clearColor.r, scene.clearColor.g, scene.clearColor.b, scene.clearColor.a)
     this._gl.enable(this._gl.DEPTH_TEST)
     this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT)
     this._gl.viewport(0, 0, this._gl.drawingBufferWidth, this._gl.drawingBufferHeight)
@@ -120,8 +119,11 @@ class WebglRenderer {
   //  si se debe renderizar con el material o con
   //  un color generado para ser unico
   //  La variable clean es para indicar si limpiamos o no la pantalla.
-  //  Sirve si se usa despues de render() para no pisar lo dibujado
-  renderNoLights (scene, camera, params = { pickingColor: false, clean: false }) {
+  //  Sirve si se usa despues de render() para no pisar lo dibujado.
+  //  El parametro checkFlag le indica a renderNoLights que debe dibujar
+  //  solamente las mallas que tengan esa bandera en true. Si no se desea
+  //  observar ninguna bandera, no se debe pasar.
+  renderNoLights (scene, camera, { pickingColor = false, clean = false, checkFlag = '' } = {}) {
     const vs = require('./shaders/simple-vs.glsl')
     const fs = require('./shaders/simple-fs.glsl')
     // Cache de programa
@@ -129,9 +131,9 @@ class WebglRenderer {
       this._cacheNoLights.programInfo = twgl.createProgramInfo(this._gl, [vs, fs])
     }
 
-    if (params.clean) {
+    if (clean) {
       twgl.resizeCanvasToDisplaySize(this._gl.canvas)
-      this._gl.clearColor(0.2, 0.2, 0.2, 1)
+      this._gl.clearColor(scene.clearColor.r, scene.clearColor.g, scene.clearColor.b, scene.clearColor.a)
       this._gl.enable(this._gl.DEPTH_TEST)
       this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT)
       this._gl.viewport(0, 0, this._gl.drawingBufferWidth, this._gl.drawingBufferHeight)
@@ -144,33 +146,36 @@ class WebglRenderer {
     for (i; i < scene._meshes.length; i++) {
       let mesh = scene._meshes[i]
 
-      //  Cache de bufferInfo en el mesh, para asegurar
-      //  que si pasan otro mesh, debo crear el buffer.
-      if (!mesh.bufferInfo) {
-        const arrays = {
-          aPosition: mesh._geometry._vertices,
-          indices: mesh._geometry._faces
+      //  Revisamos la flag (si se pidio)
+      if (checkFlag.length === 0 ||
+        (checkFlag.length > 0 && mesh[checkFlag])) {
+        //  Cache de bufferInfo en el mesh, para asegurar
+        //  que si pasan otro mesh, debo crear el buffer.
+        if (!mesh.bufferInfo) {
+          const arrays = {
+            aPosition: mesh._geometry._vertices,
+            indices: mesh._geometry._faces
+          }
+          mesh.bufferInfo = twgl.createBufferInfoFromArrays(this._gl, arrays)
         }
-        mesh.bufferInfo = twgl.createBufferInfoFromArrays(this._gl, arrays)
-      }
 
-      const uniforms = {
-        uProjectionMatrix: camera.projectionMatrix,
-        uViewMatrix: camera.viewMatrix,
-        uModelMatrix: mesh.modelMatrix,
-        uColor: (params.pickingColor) ? mesh.pickingColor : mesh._material
-      }
+        const uniforms = {
+          uProjectionMatrix: camera.projectionMatrix,
+          uViewMatrix: camera.viewMatrix,
+          uModelMatrix: mesh.modelMatrix,
+          uColor: (pickingColor) ? mesh.pickingColor : mesh._material
+        }
 
-      twgl.setBuffersAndAttributes(this._gl, this._cacheNoLights.programInfo, mesh.bufferInfo)
-      twgl.setUniforms(this._cacheNoLights.programInfo, uniforms)
-      twgl.drawBufferInfo(this._gl, mesh.bufferInfo,
-        (mesh._drawAsTriangle) ? this._gl.TRIANGLES : this._gl.LINES)
+        twgl.setBuffersAndAttributes(this._gl, this._cacheNoLights.programInfo, mesh.bufferInfo)
+        twgl.setUniforms(this._cacheNoLights.programInfo, uniforms)
+        twgl.drawBufferInfo(this._gl, mesh.bufferInfo,
+          (mesh._drawAsTriangle) ? this._gl.TRIANGLES : this._gl.LINES)
+      }
     }
   }
 
   //  Funcion para obtener informacion de picking
-  //  Imprime en consola el objeto seleccionado
-  //  y activa la flag correspondiente del objeto
+  //  Retorna el color seleccionado.
   processPicking (x, y, scene, camera) {
     //  Crear el buffer de dibujo fuera de escena
     //  en cache
@@ -203,8 +208,8 @@ class WebglRenderer {
 
     this._gl.bindFramebuffer(this._gl.FRAMEBUFFER, null)
 
-    //  Mostrar por consola el ID
-    console.log('Mesh selectionado: id=', Mesh.getId(readout))
+    //  Retornar color seleccionado
+    return readout
   }
 
   _renderlightPointBox (camera, scene) {

@@ -96,6 +96,16 @@ class ObserverMeshes {
   get sz () {
     return this._meshes[0]._sz
   }
+
+  set drawAxes (drawAxes) {
+    for (let i = 0; i < this._meshes.length; i++) {
+      this._meshes[i].drawAxes = drawAxes
+    }
+  }
+
+  get drawAxes () {
+    return this._meshes[0].drawAxes
+  }
 }
 
 module.exports = ObserverMeshes

@@ -16,6 +16,7 @@ const PointLight = require('./classes/light/pointLight')
 const SpotLight = require('./classes/light/spotLight')
 const Material = require('./classes/scene/material')
 const MeshFactory = require('./classes/utils/meshFactory')
+const Mesh = require('./classes/scene/mesh')
 
 // Obtener canvas sobre el que dibujar
 const canvas = document.getElementById('c')
@@ -182,19 +183,6 @@ scene._spotLight = context.default.spotLight
 // -------------------
 const renderer = new WebGLRend(canvas)
 // -------------------
-//  Funcion para el click
-// -------------------
-canvas.addEventListener('click', function (evt) {
-  const pickingCoord = {
-    x: evt.offsetX,
-    y: gl.canvas.height - evt.offsetY
-  }
-  console.log(pickingCoord)
-  //  Llamar a la funcion de renderizado
-  renderer.processPicking(pickingCoord.x, pickingCoord.y, scene,
-    cameras[context.gui.camara.camara])
-})
-// -------------------
 //  Funcion para preparar la escena con ejes.
 // -------------------
 const generateAxesScene = function (scene) {
@@ -234,7 +222,7 @@ function main () {
   //  Base sin luz
   renderer.renderNoLights(darkScene, cameras[context.gui.camara.camara])
   //  Dibujar ejes de objetos seleccionados
-  renderer.renderNoLights(axesScene, cameras[context.gui.camara.camara])
+  renderer.renderNoLights(axesScene, cameras[context.gui.camara.camara], { checkFlag: 'drawAxes' })
   //  Test para visualizar pickingScene
   //  renderer.renderNoLights(scene, cameras[context.gui.camara.camara], true, true)
 }
@@ -252,6 +240,29 @@ for (let i = 0; i < meshes.length; i++) {
     axesScene._meshes[i * 3 + 2]
   ])
 }
+// -------------------
+//  Funcion para el click
+// -------------------
+canvas.addEventListener('click', function (evt) {
+  const pickingCoord = {
+    x: evt.offsetX,
+    y: gl.canvas.height - evt.offsetY
+  }
+  //  Llamar a la funcion de renderizado
+  const color = renderer.processPicking(pickingCoord.x, pickingCoord.y, scene,
+    cameras[context.gui.camara.camara])
+  //  Obtener id segun el color
+  const id = Mesh.getId(color)
+  //  Revisar si no es el fondo (color negro)
+  if (id === 0) {
+    console.log('Fondo seleccionado.')
+  } else {
+    //  TODO: Obtener indice segun el id. Ahora asumimos que id-1 = idx
+    //  Cambiar flag en el axesScene de cada eje, a traves del observer
+    context.gui.observerMeshes[id - 1].drawAxes = !context.gui.observerMeshes[id - 1].drawAxes
+    console.log('Mesh seleccionado: id = ', id)
+  }
+})
 // -------------------
 //  Generar DatGui
 // -------------------

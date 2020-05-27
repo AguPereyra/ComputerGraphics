@@ -22,6 +22,8 @@ class Mesh {
     this._drawAsTriangle = true
     //  Guardar la matriz identidad para mejorar la performance
     this._identityMatrix = glMatrix.mat4.create()
+    //  Flag para indicar que se le dibujen los ejes
+    this.drawAxes = false
   }
 
   //  Funcion estatica que permite obtener e ID del mesh
