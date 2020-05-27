@@ -42,9 +42,9 @@ const sharedUniforms = {
 const localUniforms = {}
 
 function render (time) {
-  renderWith(programInfo)
+  // renderWith(programInfo)
   // Uncomment to see the framebuffer texture
-  // renderWith(pickingProgramInfo)
+  renderWith(pickingProgramInfo)
 
   if (pickingCoord) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebufferInfo.framebuffer)

@@ -23,6 +23,14 @@ class Mesh {
     //  Guardar la matriz identidad para mejorar la performance
     this._identityMatrix = glMatrix.mat4.create()
   }
+
+  //  Funcion estatica que permite obtener e ID del mesh
+  //  en funcion de un patron RGB.
+  //  NOTA: Si se modifica esta funcion se debe cambiar "get pickingColor"
+  static getId (rgb = [0, 0, 0]) {
+    const id = rgb[0] + rgb[1] * 256 + rgb[2] * 256 ** 2
+    return id
+  }
   //  Función que calcula la matriz modelo
   //  aplicandole el escalamiento, la rotación
   //  y la traslación indicadas por las propiedades internas.
@@ -45,8 +53,9 @@ class Mesh {
   }
 
   //  Function que retorna el color en funcion del ID
-  //  ATENCION: Se espera que el ID no sea un entero de
-  //  hasta 24 bits
+  //  ATENCION: Se espera que el ID sea un entero de
+  //  hasta 24 bits.
+  //  NOTA: Si se modifica esta funcion se debe cambiar "static getId"
   get pickingColor () {
     if (this.id > 2 ** 24) {
       const error = {

@@ -13,5 +13,6 @@ Las luces adquieren el color que esté indicado por la componente de ambiente.
 1. El sampler2d deberia ir para material.diffuse y material.specular? En ese caso, usamos el mismo?
 2. Usar distintas texturas para ambient y para diffuse. (modificar renderer)
 3. No se pueden cargar imagenes sin tener que usar el path relativo hardcodeado en el renderer?
-
-4.Picking: http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-an-opengl-hack/
+4. Picking: no va a funcionar si cambiamos de camara, porque la funcion de click esta definida fuera del main. 
+5. Picking: Ver de hacer que para el clearColor se indique un mensaje distinto al id.
+6. Light: Hacer que cada objeto tenga su color propio tambien.

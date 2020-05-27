@@ -8,6 +8,7 @@ const CubeGeometry = require('./classes/figures/cubeGeometry')
 const CylinderGeometry = require('./classes/figures/cylinderGeometry')
 const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
+const ObserverMeshes = require('./classes/utils/observerMeshes')
 const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
 const OrbitalCamera = require('./classes/camera/orbitalCamera')
 const AmbientLight = require('./classes/light/ambientLight')
@@ -107,7 +108,7 @@ const context = {
     ),
     cubeSt: [
       0.0, 0.0,
-      0.0, 0.0,
+      1.0, 0.0,
       0.0, 0.0,
       1.0, 0.0,
       0.0, 1.0,
@@ -152,9 +153,9 @@ cameras[2] = new OrbitalCamera(context.default.perspectiveGui.fovy, context.defa
 // -------------------
 //  Observer, que sirve para poder cambiar desde el dat.GUI
 //  los parametros de posicion de ambas camaras con una sola interfaz
-// -------------------
 context.gui.observerCamera = new ObserverCamera({ orbitalCamera: cameras[0],
   orthoCamera: cameras[1] })
+// -------------------
 // -------------------
 //  Escenas: dos, una para usar luces,
 //  y otra sin luces (para grid y ejes).
@@ -181,17 +182,76 @@ scene._spotLight = context.default.spotLight
 // -------------------
 const renderer = new WebGLRend(canvas)
 // -------------------
+//  Funcion para el click
+// -------------------
+canvas.addEventListener('click', function (evt) {
+  const pickingCoord = {
+    x: evt.offsetX,
+    y: gl.canvas.height - evt.offsetY
+  }
+  console.log(pickingCoord)
+  //  Llamar a la funcion de renderizado
+  renderer.processPicking(pickingCoord.x, pickingCoord.y, scene,
+    cameras[context.gui.camara.camara])
+})
+// -------------------
+//  Funcion para preparar la escena con ejes.
+// -------------------
+const generateAxesScene = function (scene) {
+  /*  Dibujar ejes de figuras  */
+  const axes = Utils.defaultVertexes(1, 1, 1) //  Creamos los meshes con los ejes de 0 a 1
+  /*  Creamos una nueva escena con los ejes para cada mesh  */
+  const axesScene = new Scene(context.default.clearColor)
+  /*  Generar los tres ejes correspondientes para el mesh */
+  const generateAxesMeshes = function (mesh) {
+    for (let i = 0; i < axes.length; i++) {
+      let temp = axes[i]
+      temp._tx = mesh._tx
+      temp._ty = mesh._ty
+      temp._tz = mesh._tz
+      temp._rx = mesh._rx
+      temp._ry = mesh._ry
+      temp._rz = mesh._rz
+      temp._sx = mesh._sx
+      temp._sy = mesh._sy
+      temp._sz = mesh._sz
+      axesScene.addMesh(temp)
+    }
+  }
+  /*  Para cada mesh en la escena, crear un los 3 meshes de ejes */
+  scene._meshes.forEach(generateAxesMeshes)
+  return axesScene
+}
+const axesScene = generateAxesScene(scene)
+// -------------------
 //  Dibujar la escena
 // -------------------
 function main () {
   //  Refrescar pantalla
   window.requestAnimationFrame(main)
-  //  Dibujar
+  //  Dibujar escena principal
   renderer.render(scene, cameras[context.gui.camara.camara])
   //  Base sin luz
   renderer.renderNoLights(darkScene, cameras[context.gui.camara.camara])
+  //  Dibujar ejes de objetos seleccionados
+  renderer.renderNoLights(axesScene, cameras[context.gui.camara.camara])
+  //  Test para visualizar pickingScene
+  //  renderer.renderNoLights(scene, cameras[context.gui.camara.camara], true, true)
 }
 window.requestAnimationFrame(main)
+// -------------------
+//  Preparar los observer que vinculan cada figura con sus ejes
+// -------------------
+context.gui.observerMeshes = []
+for (let i = 0; i < meshes.length; i++) {
+  //  Por cada mesh habra 3 en axesScene
+  context.gui.observerMeshes[i] = new ObserverMeshes([
+    meshes[i],
+    axesScene._meshes[i * 3],
+    axesScene._meshes[i * 3 + 1],
+    axesScene._meshes[i * 3 + 2]
+  ])
+}
 // -------------------
 //  Generar DatGui
 // -------------------

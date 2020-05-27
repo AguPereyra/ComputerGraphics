@@ -40,18 +40,18 @@ class Utils {
   //  Función que dibuja los vertices
   //  positivos XYZ con rojo, verde y azul en
   //  3 mallas de la escena.
-  static defaultVertexes () {
+  static defaultVertexes (xMax = 10, yMax = 10, zMax = 10) {
     //  Ejes
     const vertices = [
       0.0, 0.0, 0.0, // Línea roja (X)
-      10.0, 0.0, 0.0, // Línea roja (X)
+      xMax, 0.0, 0.0, // Línea roja (X)
       0.0, 0.0, 0.0, // Línea verde (Y)
-      0.0, 10.0, 0.0, // Línea verde (Y)
+      0.0, yMax, 0.0, // Línea verde (Y)
       0.0, 0.0, 0.0, // Línea azul (Z)
-      0.0, 0.0, 10.0 // Línea azul (Z)
+      0.0, 0.0, zMax // Línea azul (Z)
     ]
     const colors = [1.0, 0.0, 0.0,
-      0.0, 0.1, 0.0,
+      0.0, 1.0, 0.0,
       0.0, 0.0, 1.0]
     //  Crear Meshes
     const meshes = []
@@ -114,6 +114,7 @@ class Utils {
     const cameras = args.cameras
     const figures = args.datGui.figures
     const observerCamera = args.datGui.observerCamera
+    const observerMeshes = args.datGui.observerMeshes
     const scene = args.scene
     //  DatGUI
     const guiFigures = new Dat.GUI()
@@ -123,15 +124,15 @@ class Utils {
     let figuresGui = []
     for (let i = 0; i < meshes.length; i++) {
       figuresGui.push(figuresFolder.addFolder(figures[i]))
-      figuresGui[i].add(meshes[i], '_tx').min(-20).max(20).step(0.01)
-      figuresGui[i].add(meshes[i], '_ty').min(-20).max(20).step(0.01)
-      figuresGui[i].add(meshes[i], '_tz').min(-20).max(20).step(0.01)
-      figuresGui[i].add(meshes[i], '_rx').min(0).max(360).step(0.1)
-      figuresGui[i].add(meshes[i], '_ry').min(0).max(360).step(0.1)
-      figuresGui[i].add(meshes[i], '_rz').min(0).max(360).step(0.1)
-      figuresGui[i].add(meshes[i], '_sx').min(0).step(0.1)
-      figuresGui[i].add(meshes[i], '_sy').min(0).step(0.1)
-      figuresGui[i].add(meshes[i], '_sz').min(0).step(0.1)
+      figuresGui[i].add(observerMeshes[i], 'tx').min(-20).max(20).step(0.01)
+      figuresGui[i].add(observerMeshes[i], 'ty').min(-20).max(20).step(0.01)
+      figuresGui[i].add(observerMeshes[i], 'tz').min(-20).max(20).step(0.01)
+      figuresGui[i].add(observerMeshes[i], 'rx').min(0).max(360).step(0.1)
+      figuresGui[i].add(observerMeshes[i], 'ry').min(0).max(360).step(0.1)
+      figuresGui[i].add(observerMeshes[i], 'rz').min(0).max(360).step(0.1)
+      figuresGui[i].add(observerMeshes[i], 'sx').min(0).step(0.1)
+      figuresGui[i].add(observerMeshes[i], 'sy').min(0).step(0.1)
+      figuresGui[i].add(observerMeshes[i], 'sz').min(0).step(0.1)
       const colorsFold = figuresGui[i].addFolder('Material')
       colorsFold.addColor(meshes[i]._material.color, 'specularRGB')
       colorsFold.add(meshes[i]._material, 'shininess')
