@@ -11,7 +11,6 @@ const SphereGeometry = require('./classes/figures/sphereGeometry')
 const ObserverCamera = require('./classes/utils/observerCamera')
 const ObserverMeshes = require('./classes/utils/observerMeshes')
 const PerspectiveCamera = require('./classes/camera/perspectiveCamera')
-const OrbitalCamera = require('./classes/camera/orbitalCamera')
 const AmbientLight = require('./classes/light/ambientLight')
 const PointLight = require('./classes/light/pointLight')
 const SpotLight = require('./classes/light/spotLight')
@@ -145,9 +144,6 @@ cameras[0] = new PerspectiveCamera(context.default.perspectiveGui.fovy, context.
 //  Ortográfica
 cameras[1] = new OrtographicCamera(context.default.orthoGui.left, context.default.orthoGui.right, context.default.orthoGui.bottom,
   context.default.orthoGui.top, context.default.orthoGui.near, context.default.orthoGui.far)
-//  Camara con rotacion
-cameras[2] = new OrbitalCamera(context.default.perspectiveGui.fovy, context.default.perspectiveGui.aspect,
-  context.default.perspectiveGui.near, context.default.perspectiveGui.far)
 // -------------------
 //  Observer, que sirve para poder cambiar desde el dat.GUI
 //  los parametros de posicion de ambas camaras con una sola interfaz
@@ -180,7 +176,8 @@ scene._spotLight = context.default.spotLight
 // -------------------
 const renderer = new WebGLRend(canvas)
 // -------------------
-//  Funcion para preparar la escena con ejes.
+//  Funcion para preparar la escena que contiene solo los ejes de las figuras.
+//  (que luego se muestran al hacer click)
 // -------------------
 const generateAxesScene = function (scene) {
   /*  Dibujar ejes de figuras  */
@@ -227,7 +224,7 @@ function main () {
 }
 window.requestAnimationFrame(main)
 // -------------------
-//  Preparar los observer que vinculan cada figura con sus ejes
+//  Preparar los observer que vinculan cada figura con los meshes de sus ejes
 // -------------------
 context.gui.observerMeshes = []
 for (let i = 0; i < meshes.length; i++) {
