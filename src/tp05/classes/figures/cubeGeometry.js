@@ -27,8 +27,8 @@ class CubeGeometry extends Geometry {
       }
     }
     //  Caras en -z/+z
-    for (let x of points) {
-      for (let z of points) {
+    for (let z of points) {
+      for (let x of points) {
         this._vertices.push(x, x, z)
         this._vertices.push(-x, x, z)
       }
@@ -49,7 +49,6 @@ class CubeGeometry extends Geometry {
       this._faces.push(k1, k1 + 1, k2)
       this._faces.push(k2, k1 + 1, k2 - 1)
     }
-
     //  Normales
     this.normals = this._vertices
   }

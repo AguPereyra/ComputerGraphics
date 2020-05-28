@@ -50,8 +50,8 @@ class WebglRenderer {
 
         //  Cacheamos la textura
         this._cache.figures[i].texture = twgl.createTextures(this._gl, {
-          ambient: {
-            src: require('./textures' + mesh._material.map)
+          diffuse: {
+            src: require('./textures/' + mesh._material.map)
           }
         })
       }
@@ -62,8 +62,8 @@ class WebglRenderer {
         uModelMatrix: mesh.modelMatrix,
         uNormalMatrix: mesh.normalMatrix,
         uViewPos: [camera._eyeX, camera._eyeY, camera._eyeZ],
-        'uMaterial.ambient': this._cache.figures[i].texture.ambient,
-        'uMaterial.diffuse': this._cache.figures[i].texture.ambient,
+        'uMaterial.ambient': this._cache.figures[i].texture.diffuse,
+        'uMaterial.diffuse': this._cache.figures[i].texture.diffuse,
         'uMaterial.specular': mesh._material.color._specular,
         'uMaterial.shininess': mesh._material.shininess,
         'uDirLight.active': scene._ambientLight.active,

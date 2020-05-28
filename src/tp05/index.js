@@ -53,7 +53,7 @@ const context = {
       specular: [0.332741, 0.328634, 0.346435],
       shininess: 33,
       // Textura
-      map: '/firefox-256x256.png'
+      map: 'firefox-256x256.png'
     },
     cylinderMaterial: {
       // Turquesa

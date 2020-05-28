@@ -16,3 +16,4 @@ Las luces adquieren el color que esté indicado por la componente de ambiente.
 4. Picking: no va a funcionar si cambiamos de camara, porque la funcion de click esta definida fuera del main. 
 5. Picking: Ver de hacer que para el clearColor se indique un mensaje distinto al id.
 6. Light: Hacer que cada objeto tenga su color propio tambien.
+7. Esta bien si dejo que ambient sea un color? (Para seguir el video)

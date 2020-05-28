@@ -134,6 +134,7 @@ class Utils {
       figuresGui[i].add(observerMeshes[i], 'sy').min(0).step(0.1)
       figuresGui[i].add(observerMeshes[i], 'sz').min(0).step(0.1)
       const colorsFold = figuresGui[i].addFolder('Material')
+      //colorsFold.addColor(meshes[i]._material.color, 'ambientRGB')
       colorsFold.addColor(meshes[i]._material.color, 'specularRGB')
       colorsFold.add(meshes[i]._material, 'shininess')
     }
