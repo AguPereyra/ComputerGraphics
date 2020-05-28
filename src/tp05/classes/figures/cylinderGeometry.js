@@ -1,10 +1,21 @@
 const Geometry = require('./geometry')
 
+/**
+ *
+ *
+ * @class CylinderGeometry
+ * @extends {Geometry}
+ * Clase que calcula vertices, normales y st (coordenadas de texturas) del cilindro
+ * por defecto.
+ * Si al constructor se le pasa un arreglo de radios [0, 1] o [1, 0] se genera un cono.
+ */
 class CylinderGeometry extends Geometry {
   //  radius: arreglo que define el radio de la base
   //    en la posicion 0 y el radio del tope en la posicion 1.
   constructor (height, radius = [1, 1]) {
     super()
+    this._height = height
+    this._radius = radius
     //  Este codigo esta basado en el hallado en: http://www.songho.ca/opengl/gl_cylinder.html
     //  Para disminuir calculos hacemos una
     //  circunferencia de radio unitario y luego
@@ -13,14 +24,27 @@ class CylinderGeometry extends Geometry {
     //  Definimos los vertices
     const verticesUnit = this._getUnitCircle(sectorCount)
 
+    //  ST
+    const xTextStep = 1 / sectorCount
+    let yText = 0
+    let xText = 0
+
     //  Colocamos las circunferencias en la base
-    //  y en el tope, con sus respectivos radios
+    //  y en el tope, con sus respectivos radios.
+    //  Para aceptar texturas, generamos los vertices
+    //  tres veces (cuerpo, tope y base).
     const heights = [-height / 2, height / 2]
-    for (let j = 0; j < 2; j++) {
-      for (let i = 0; i < verticesUnit.length; i += 2) {
-        this._vertices.push(verticesUnit[i] * radius[j]) //  x
-        this._vertices.push(verticesUnit[i + 1] * radius[j]) // y
-        this._vertices.push(heights[j]) //  z
+    for (let k = 0; k < 3; k++) {
+      yText = 0
+      for (let j = 0; j < 2; j++, yText++) {
+        xText = 0
+        for (let i = 0; i < verticesUnit.length; i += 2, xText += xTextStep) {
+          this._vertices.push(verticesUnit[i] * radius[j]) //  x
+          this._vertices.push(verticesUnit[i + 1] * radius[j]) // y
+          this._vertices.push(heights[j]) //  z
+          //  Solo la textura del cuerpo
+          this._st.push(xText, yText)
+        }
       }
     }
 
@@ -70,14 +94,24 @@ class CylinderGeometry extends Geometry {
   //  Funcion que genera los indices de los extremos
   _getIndicesTopBottom (sectorCount) {
     //  Base
-    let i
-    for (i = 1; i <= sectorCount - 2; i++) {
-      this._faces.push(0, i, i + 1)
+    const base = sectorCount * 2
+    const top = sectorCount * 3
+    let i = base + 1
+    for (; i <= top - 2; i++) {
+      this._faces.push(base, i, i + 1)
     }
     //  Tope
-    for (i = sectorCount; i <= sectorCount * 2 - 2; i++) {
+    for (i = top; i <= top + sectorCount - 2; i++) {
       this._faces.push(sectorCount, i + 1, i)
     }
+  }
+
+  /**
+   * Funcion para obtener el largo de la figura del centro hasta uno de sus extremos.
+   * En el caso de la esfera retorna el mayor valor entre los radios y la altura/2.
+   */
+  get sizeFromCenter () {
+    return Math.max(this._radius[0], this._radius[1], this._height / 2)
   }
 }
 

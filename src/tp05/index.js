@@ -1,4 +1,5 @@
 console.log('tp05')
+console.log('Cada mesh tiene la textura cargada en su componente difusa.')
 
 const WebGLRend = require('./classes/webglrenderer')
 const Scene = require('./classes/scene/scene')
@@ -53,21 +54,25 @@ const context = {
       specular: [0.332741, 0.328634, 0.346435],
       shininess: 33,
       // Textura
-      map: 'firefox-256x256.png'
+      map: 'brick-wall.jpg'
     },
     cylinderMaterial: {
       // Turquesa
       ambient: [0.1, 0.18725, 0.1745],
       diffuse: [0.396, 0.74151, 0.69102],
       specular: [0.297254, 0.30829, 0.306678],
-      shininess: 1
+      shininess: 1,
+      //  Textura
+      map: 'bubbled-glass.jpg'
     },
     sphereMaterial: {
       // Cobre
       ambient: [0.19125, 0.0735, 0.0225],
       diffuse: [0.7038, 0.27048, 0.0828],
       specular: [0.256777, 0.137622, 0.086014],
-      shininess: 1
+      shininess: 1,
+      //  Textura
+      map: 'earthmap-1024x512.jpg'
     },
     axes: Utils.defaultVertexes(),
     grid: Utils.generateGrid([-10, 10], 0, [-10, 10], [0.5, 0.5, 0.5]),
@@ -106,32 +111,7 @@ const context = {
         innerCutOff: 12.5 * Math.PI / 180,
         outerCutOff: 17.5 * Math.PI / 180
       }
-    ),
-    cubeSt: [
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0]
+    )
   }
 }
 // ---------------------------------------
@@ -139,21 +119,22 @@ const context = {
 // -------------------
 let meshes = []
 const cube = new CubeGeometry(1)
-cube._st = context.default.cubeSt
-const sphere = new SphereGeometry(1)
+const sphere = new SphereGeometry(0.5)
 const cylinder = new CylinderGeometry(1, [1, 1])
 // -------------------
 //  Crear Materiales para las figuras
 const materials = []
 materials.push(new Material(context.default.cubeMaterial))
-//materials.push(new Material(context.default.sphereMaterial))
-//materials.push(new Material(context.default.cylinderMaterial))
+materials.push(new Material(context.default.sphereMaterial))
+materials.push(new Material(context.default.cylinderMaterial))
 // -------------------
 //  Meter en mallas las figuras
 // -------------------
 meshes.push(context.meshFactory.getMesh(cube, materials[0]))
-//meshes.push(new Mesh(sphere, materials[1]))
-//meshes.push(new Mesh(cylinder, materials[2]))
+meshes.push(context.meshFactory.getMesh(sphere, materials[1]))
+meshes[1]._tx = 3
+meshes.push(context.meshFactory.getMesh(cylinder, materials[2]))
+meshes[2]._tz = 3
 // -------------------
 //  Cámaras
 // -------------------
@@ -203,11 +184,13 @@ const renderer = new WebGLRend(canvas)
 // -------------------
 const generateAxesScene = function (scene) {
   /*  Dibujar ejes de figuras  */
-  const axes = Utils.defaultVertexes(1, 1, 1) //  Creamos los meshes con los ejes de 0 a 1
   /*  Creamos una nueva escena con los ejes para cada mesh  */
   const axesScene = new Scene(context.default.clearColor)
   /*  Generar los tres ejes correspondientes para el mesh */
   const generateAxesMeshes = function (mesh) {
+    /*  Generar vertices en funcion del tamaño de la figura */
+    const size = mesh._geometry.sizeFromCenter
+    const axes = Utils.defaultVertexes(size * 2, size * 2, size * 2) //  Creamos los meshes con los ejes de 0 a size * 2, para que sea visible
     for (let i = 0; i < axes.length; i++) {
       let temp = axes[i]
       temp._tx = mesh._tx

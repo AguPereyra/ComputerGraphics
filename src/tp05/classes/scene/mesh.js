@@ -24,6 +24,8 @@ class Mesh {
     this._identityMatrix = glMatrix.mat4.create()
     //  Flag para indicar que se le dibujen los ejes
     this.drawAxes = false
+    //  Flag para indicar si se usan texturas
+    this.useTexture = true
   }
 
   //  Funcion estatica que permite obtener e ID del mesh

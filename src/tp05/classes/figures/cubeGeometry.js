@@ -1,8 +1,16 @@
 const Geometry = require('./geometry')
-
+/**
+ *
+ *
+ * @class CubeGeometry
+ * @extends {Geometry}
+ * Clase que calcula vertices, normales y st (coordenadas de texturas) del cubo
+ * en funcion del parametro size pasado al constructor.
+ */
 class CubeGeometry extends Geometry {
   constructor (size) {
     super()
+    this._size = size
     //  Definir vertices de cubo de lado size
     //  centrado en (0,0,0)
     const points = [-size / 2, size / 2] // Puntos positivo y negativo de los ejes
@@ -49,8 +57,24 @@ class CubeGeometry extends Geometry {
       this._faces.push(k1, k1 + 1, k2)
       this._faces.push(k2, k1 + 1, k2 - 1)
     }
+    //  ST
+    for (let i = 0; i < 6; i++) {
+      this._st.push(0, 0)
+      this._st.push(1, 0)
+      this._st.push(1, 1)
+      this._st.push(0, 1)
+    }
+
     //  Normales
     this.normals = this._vertices
+  }
+
+  /**
+   * Funcion para obtener el largo de la figura del centro hasta uno de sus extremos.
+   * En el caso de la esfera retorna el size / 2.
+   */
+  get sizeFromCenter () {
+    return this._size / 2
   }
 }
 

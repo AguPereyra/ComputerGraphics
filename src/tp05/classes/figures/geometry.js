@@ -52,6 +52,14 @@ class Geometry {
   set normals (norm) {
     this._normals = norm
   }
+
+  /**
+   * Funcion para obtener el largo de la figura del centro hasta uno de sus extremos.
+   * Ah sobreescribir por implementaciones.
+   */
+  get sizeFromCenter () {
+    return null
+  }
 }
 
 module.exports = Geometry
