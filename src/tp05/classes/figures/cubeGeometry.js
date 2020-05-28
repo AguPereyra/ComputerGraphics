@@ -19,6 +19,21 @@ class CubeGeometry extends Geometry {
     //   +--------+
     //  k1
     //  plano xz --->
+    //  Caras en -x/+x
+    for (let x of points) {
+      for (let z of points) {
+        this._vertices.push(x, z, z)
+        this._vertices.push(x, -z, z)
+      }
+    }
+    //  Caras en -z/+z
+    for (let x of points) {
+      for (let z of points) {
+        this._vertices.push(x, x, z)
+        this._vertices.push(-x, x, z)
+      }
+    }
+    //  Caras en -y/+y
     for (let y of points) {
       for (let z of points) {
         this._vertices.push(z, y, z)
@@ -26,17 +41,13 @@ class CubeGeometry extends Geometry {
       }
     }
     //  Generar indices
-    //  Cuerpo
-    const k1 = 0
-    const k2 = k1 + 4
-    for (let i = 0; i < 4; i++) {
-      this._faces.push(k1 + i, k1 + (i + 1) % 4, k2 + i)
-      this._faces.push(k2 + i, k1 + (i + 1) % 4, k2 + (i + 1) % 4)
-    }
-    //  Tope y base
-    for (let i = 0; i < 2; i++) {
-      this._faces.push(k1 + i, k1 + 3, k1 + 1 + i)
-      this._faces.push(k2 + i, k2 + 1 + i, k2 + 3)
+    //  Cuerpo, tope y base.
+    //  Atencion, si se usase para calcular normales, el tope estaria al reves.
+    let k1 = 0
+    let k2 = k1 + 3
+    for (; k1 <= 20; k1 += 4, k2 += 4) {
+      this._faces.push(k1, k1 + 1, k2)
+      this._faces.push(k2, k1 + 1, k2 - 1)
     }
 
     //  Normales
