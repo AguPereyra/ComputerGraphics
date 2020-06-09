@@ -107,7 +107,7 @@ class Utils {
   }
 
   //  Función que genera el Dat Gui con los parámetros necesarios
-  //  para el TP5
+  //  para el TP6
   static generateDatGui (args) {
     const meshes = args.meshes
     const camarasGui = args.datGui.camara
@@ -122,8 +122,9 @@ class Utils {
     //  Figuras
     const figuresFolder = guiFigures.addFolder('Figures')
     let figuresGui = []
+    //  ATENCIÓN: Se espera la última versión de geometry, cargada con un atributo .name
     for (let i = 0; i < meshes.length; i++) {
-      figuresGui.push(figuresFolder.addFolder(figures[i]))
+      figuresGui.push(figuresFolder.addFolder(meshes[i]._geometry.name))
       figuresGui[i].add(observerMeshes[i], 'tx').min(-20).max(20).step(0.01)
       figuresGui[i].add(observerMeshes[i], 'ty').min(-20).max(20).step(0.01)
       figuresGui[i].add(observerMeshes[i], 'tz').min(-20).max(20).step(0.01)

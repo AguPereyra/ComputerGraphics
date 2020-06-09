@@ -33,7 +33,7 @@ class Geometry {
       const e2 = glMatrix.vec3.subtract([],
         this._vertices.slice(ic, ic + 3),
         this._vertices.slice(ib, ib + 3))
-      const crossProd = glMatrix.vec3.cross([], e1, e2)
+      const crossProd = glMatrix.vec3.cross([], e2, e1)
 
       this._normals[ia] += crossProd[0]
       this._normals[ia + 1] += crossProd[1]

@@ -1,6 +1,6 @@
 console.log('tp06')
 
-const obj = require('../models/cube.obj')
+const obj = require('../models/cube-with-triangulated-faces.obj')
 
 console.log(obj)
 
@@ -118,22 +118,34 @@ const context = {
 //  Generar Figuras
 // -------------------
 let meshes = []
-const figure1 = GeometryParser.parseFile('../models/cube-with-triangulated-faces.obj')
+let figure1 = GeometryParser.parseFile({ path: 'monkey.obj' })
+let figure2 = GeometryParser.parseFile({ path: 'teapot.obj' })
 // -------------------
 //  Crear Materiales para las figuras
 // -------------------
 const materials = []
 materials.push(new Material(context.default.cubeMaterial))
+materials.push(new Material(context.default.sphereMaterial))
 // -------------------
 //  Meter en mallas las figuras
 // -------------------
 //Cargar st por defecto
-for (let i = 0; i < 24; i++) {
-  figure1._st.push(i)
+const defaultSt = function (figure) {
+  for (let i = 0; i < figure._vertices.length; i++) {
+    figure._st.push(0.0, 0.0)
+  }
+  return figure
 }
+
+figure1 = defaultSt(figure1)
+figure2 = defaultSt(figure2)
+
 meshes.push(context.meshFactory.getMesh(figure1, materials[0]))
+meshes.push(context.meshFactory.getMesh(figure2, materials[1]))
 meshes[0].useTexture = false
-console.log(figure1)
+meshes[1].useTexture = false
+meshes[0]._tz = 3
+meshes[1]._tx = 3
 // -------------------
 //  Cámaras
 // -------------------
