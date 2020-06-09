@@ -11,3 +11,10 @@ Las luces adquieren el color que esté indicado por la componente de ambiente.
 
 ## TP5
 Los objetos tienen la textura en su componente difuso de color.
+
+## TP6
+1. Los vertices pueden venir con infomacion de color, la usamos?
+2. Deberiamos aceptar space vertices?
+3. Ojo con usar vertices negativos tambien.
+4. Pasar los vertices a 4 puntos.
+5. Ver de hacer lectura asincrona.
