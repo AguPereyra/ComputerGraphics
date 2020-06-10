@@ -118,7 +118,8 @@ const context = {
 //  Generar Figuras
 // -------------------
 let meshes = []
-let figure1 = GeometryParser.parseFile({ path: 'monkey.obj' })
+let figure0 = GeometryParser.parseFile({ path: 'monkey_smooth.obj' })
+let figure1 = GeometryParser.parseFile({ path: 'monkey_flat.obj' })
 let figure2 = GeometryParser.parseFile({ path: 'teapot.obj' })
 // -------------------
 //  Crear Materiales para las figuras
@@ -126,10 +127,11 @@ let figure2 = GeometryParser.parseFile({ path: 'teapot.obj' })
 const materials = []
 materials.push(new Material(context.default.cubeMaterial))
 materials.push(new Material(context.default.sphereMaterial))
+materials.push(new Material(context.default.cylinderMaterial))
 // -------------------
 //  Meter en mallas las figuras
 // -------------------
-//Cargar st por defecto
+// Cargar st por defecto
 const defaultSt = function (figure) {
   for (let i = 0; i < figure._vertices.length; i++) {
     figure._st.push(0.0, 0.0)
@@ -137,15 +139,21 @@ const defaultSt = function (figure) {
   return figure
 }
 
+figure0 = defaultSt(figure0)
 figure1 = defaultSt(figure1)
 figure2 = defaultSt(figure2)
 
-meshes.push(context.meshFactory.getMesh(figure1, materials[0]))
-meshes.push(context.meshFactory.getMesh(figure2, materials[1]))
+meshes.push(context.meshFactory.getMesh(figure0, materials[0]))
+meshes.push(context.meshFactory.getMesh(figure1, materials[1]))
+meshes.push(context.meshFactory.getMesh(figure2, materials[2]))
 meshes[0].useTexture = false
 meshes[1].useTexture = false
+meshes[2].useTexture = false
 meshes[0]._tz = 3
-meshes[1]._tx = 3
+meshes[1]._tx = 5
+meshes[2]._sx = 0.5
+meshes[2]._sy = 0.5
+meshes[2]._sz = 0.5
 // -------------------
 //  Cámaras
 // -------------------

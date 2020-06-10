@@ -19,3 +19,4 @@ Los objetos tienen la textura en su componente difuso de color.
 4. Pasar los vertices a 4 puntos.
 5. Segun el orden de dibujo de los vertices, el calculo de las normales cambia el sentido, ¿Cómo hacemos para tener eso en cuenta?
 6. ¿Deberíamos aceptar distintos ordenes para índices de normales, texturas y vértices? ¿Cómo?
+7. ¿Es correcta la forma en la que hice indiqué el smooth shading en el obj?

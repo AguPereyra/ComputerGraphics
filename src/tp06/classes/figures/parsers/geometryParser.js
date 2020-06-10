@@ -14,7 +14,7 @@ class GeometryParser {
   }
 
   static _readFunction (data) {
-    //  Patron para vértices y normales
+    //  Patrón para vértices y normales
     const verticesPattern = /(-?[0-9]+\.[0-9]+)/g
     //  TODO: Aceptar índices negativos
     //  TODO: Revisar la exigencia de que haya un punto
@@ -25,9 +25,14 @@ class GeometryParser {
     *   /(-?1\.0*)/g       Patrón para valor de +-1.000....
     */
     const textCoordsPattern = /(-?0\.[0-9]*)|(-?1\.0*)/g
+    //  Patrón para flat shading
+    const flatShadingPattern = /\s+off\s*$/g
+    //  Variable para almacenar arreglos
     let tempArray
-    //  Geometry que contiene la informacion
+    //  Geometry que contiene la información
     let geometry = new Geometry()
+    //  Variable que indica si paras a flatshading
+    let flatShading = false
     //  Leer archivo por lineas
     const lines = data.split('\n')
     let line = ''
@@ -73,9 +78,57 @@ class GeometryParser {
         case 'o ':
           geometry.name = line.slice(2).trim()
           break
+        //  Ver si smooth shading está deshabilitado
+        case 's ':
+          flatShading = line.match(flatShadingPattern) !== null
+          break
       }
     }
+
+    //  Si se requirere flatshading, repetimos la información de
+    //  vértices y normales
+    if (flatShading) {
+      const flatedPoints = this._toFlatShading({
+        _vertices: geometry._vertices,
+        _faces: geometry._faces
+      })
+      geometry._faces = flatedPoints.faces
+      geometry._vertices = flatedPoints.vertices
+    }
     return geometry
+  }
+
+  //  Funcion para aumentar la informacion y asi hacer flat shading
+  //  TODO: Acomodar ST
+  static _toFlatShading ({ _vertices = [], _faces = [] }) {
+    const checkV = typeof _vertices !== 'undefined' && _vertices.length > 0
+    const checkF = typeof _faces !== 'undefined' && _faces.length > 0
+    if (!checkF || !checkV) {
+      throw Error('Lacking parameters of function. Make sure vertices, normals and faces are not empty arrays.')
+    }
+
+    let faces = [..._faces]
+    //  TODO: Multiplicacion variable de vertices
+    const redundantVertices = _vertices.concat(_vertices, _vertices)
+
+    /* Acomodar índices de acuerdo a las nuevas posiciones */
+    //  Variable que lleva el conteo de cuántas veces apareció
+    //  el vértice en faces, para acomodar la referencia acorde.
+    //  El índice se usa como referencia del vértice, y el valor
+    //  indica la cantidad de veces que apareció ese vértice en faces.
+    let countUsed = []
+    for (let i = 0; i < _vertices.length; i++) {
+      countUsed[i] = 0
+    }
+    //  Acomodar índices
+    for (let i = 0; i < faces.length; i++) {
+      faces[i] = faces[i] + (_vertices.length / 3) * countUsed[faces[i]]
+      countUsed[faces[i]] += 1
+    }
+    return {
+      faces: faces,
+      vertices: redundantVertices
+    }
   }
 }
 
