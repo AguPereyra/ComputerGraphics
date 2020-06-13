@@ -112,7 +112,6 @@ class Utils {
     const meshes = args.meshes
     const camarasGui = args.datGui.camara
     const cameras = args.cameras
-    const figures = args.datGui.figures
     const observerCamera = args.datGui.observerCamera
     const observerMeshes = args.datGui.observerMeshes
     const scene = args.scene
