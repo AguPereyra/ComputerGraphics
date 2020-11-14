@@ -28,10 +28,10 @@ If you are faced with packages needing audit fixes, follow the instructions that
 ## Samples:
 
 ### TP 5 
-<img src="media/tp5.gif" width=25% height=25% />
+<img src="media/tp5.gif" width=75% height=75% />
 
 ### TP 6
-<img src="media/tp6.gif" width=25% height=25% />
+<img src="media/tp6.gif" width=75% height=75% />
 
 ## Documentation
 https://twgljs.org/docs/
